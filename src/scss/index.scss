@@ -1,0 +1,238 @@
+@import '~normalize.css';
+
+
+%suitSize {
+  width: 40px;
+  height: 40px;
+}
+%rankSuitSize {
+  width: 10px;
+  height: 10px;
+}
+
+%clubs {
+  background: url("../assets/svg/clubs.svg") no-repeat;
+  filter: invert(34%) sepia(100%) saturate(1725%) hue-rotate(100deg) brightness(88%) contrast(105%);
+}
+%diamonds {
+  background: url("../assets/svg/diamond.svg") no-repeat;
+  filter: invert(32%) sepia(84%) saturate(5319%) hue-rotate(211deg) brightness(101%) contrast(106%);
+}
+%spades {
+  background: url("../assets/svg/spade.svg") no-repeat;
+}
+%hearts {
+  background: url("../assets/svg/heart.svg") no-repeat;
+  filter: invert(21%) sepia(90%) saturate(7396%) hue-rotate(358deg) brightness(106%) contrast(118%);
+}
+
+.game {
+  background: #a1a1a1;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &__body {
+    width: 90%;
+    height: 90%;
+    border-radius: 50px;
+    background: #dadada;
+    overflow: scroll;
+    display: grid;
+    grid-template-columns: minmax(200px, auto) 1fr minmax(200px, auto);
+    grid-template-rows: repeat(3, auto);
+    gap: 20px;
+    align-items: center;
+    justify-items: center;
+    grid-template-areas: "trump pc ." "deck table discard" ". player btn";
+
+
+    .card {
+      position: absolute;
+      display: flex;
+      flex-flow: column;
+      justify-content: space-between;
+      align-items: center;
+      width: 80px;
+      height: 120px;
+      padding: 5px;
+      margin: 5px;
+      background: #fff;
+      border: 2px solid black;
+      border-radius: 10px;
+
+      &__trump {
+        transform: rotate(90deg);
+        top: 10px;
+        right: -20px;
+      }
+
+      &__shirt:not(.card__trump) {
+        //background-color: #555;
+        //background-image: url("../assets/svg/suits.svg");
+        //background-repeat: no-repeat;
+      }
+
+      &__top {
+        display: flex;
+        flex-flow: column;
+        align-self: flex-start;
+        align-items: center;
+      }
+
+      &__bottom {
+        display: flex;
+        flex-flow: column;
+        align-self: flex-end;
+        align-items: center;
+        transform: rotate(180deg);
+      }
+
+      &__rankSuit {
+        @extend %rankSuitSize;
+      }
+
+      .spades {
+        @extend %spades;
+      }
+
+      .clubs {
+        @extend %clubs;
+      }
+
+      .diamonds {
+        @extend %diamonds;
+      }
+
+      .hearts {
+        @extend %hearts;
+      }
+
+      &__suit {
+        @extend %suitSize;
+      }
+
+      &.card__shirt:not(.card__trump) > * {
+        //visibility: hidden;
+      }
+    }
+
+    .deck {
+      grid-area: deck;
+      position: relative;
+      right: 20px;
+      width: 150px;
+      height: 150px;
+    }
+
+    .table {
+      grid-area: table;
+      display: flex;
+      flex-flow: row;
+      justify-content: space-around;
+      width: 100%;
+
+      & .card {
+        position: static;
+        background: #fff;
+      }
+
+      & > .card.card__shirt > * {
+        visibility: visible;
+      }
+    }
+
+    .discard {
+      grid-area: discard;
+      display: flex;
+      flex-flow: row;
+      position: relative;
+      left: 20px;
+      width: 150px;
+      height: 150px;
+    }
+
+    .hands {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+
+      & .card {
+        position: static;
+      }
+    }
+
+    .pcHand {
+      grid-area: pc;
+    }
+
+    .playerHand {
+      grid-area: player;
+
+      & > .card.card__shirt > * {
+        visibility: visible;
+      }
+
+      & > .card {
+        background: #fff;
+        cursor: pointer;
+        //transform: translateY(1px);
+        //transition: transform .3s;
+      }
+      & > .card:hover {
+        transform: translateY(-5px);
+        //transition: transform .3s;
+      }
+    }
+
+    .actionBtn {
+      grid-area: btn;
+      visibility: hidden;
+      width: 150px;
+      height: 50px;
+      background: #000;
+      color: #fff;
+      border-radius: 50px;
+      font-size: 1.125rem;
+      font-weight: bold;
+      outline: none;
+      border: none;
+
+      &:hover {
+        background: gray;
+      }
+    }
+
+    .trumpOfGame {
+      grid-area: trump;
+      position: relative;
+      //top: 10px;
+      right: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 50px;
+      height: 50px;
+      //border: 1px solid #000;
+      //border-radius: 50%;
+
+
+      &.clubs {
+        @extend %clubs;
+      }
+      &.diamonds {
+        @extend %diamonds;
+      }
+      &.spades {
+        @extend %spades;
+      }
+      &.hearts {
+        @extend %hearts;
+      }
+    }
+  }
+}
