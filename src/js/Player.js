@@ -1,12 +1,11 @@
-
-export default class Player{
+export default class Player {
   constructor(name) {
     this.playerName = name;
     this.playerCards = [];
   }
 
-  // move() {
-  //
-  // }
+  static move(value, suit) {
+    console.log(value, suit)
+  }
 
 }

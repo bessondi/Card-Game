@@ -4,4 +4,4 @@ import board from '@/js/Board'
 
 board.create('Di', 'Ai')
 
-console.log( board.players[0], board.players[1])
+console.log( board.players[1].playerCards, board.players[0].playerCards)

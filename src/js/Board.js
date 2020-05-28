@@ -5,6 +5,7 @@ import Player from '@/js/Player'
 class Board {
   constructor() {
     this.players = [] // игроки
+    this.state = {}
   }
 
   create(playerName, pcName) {
@@ -30,11 +31,28 @@ class Board {
     // рендер колоды + 13 козырная карта
     const trumpCard = deck.render(deck.deckCards) // объект
     const trumpOfGame = document.querySelector('.trumpOfGame')
-    trumpOfGame.classList.add(`${trumpCard.suit.toLowerCase()}`)
+    trumpOfGame.classList.add(`${trumpCard.suit}`)
+
+    const playerHand = playerOne.playerCards
+    const pcHand = playerTwo.playerCards
 
     // рендер карт игроков
-    deck.renderCard({playersHand: [playerOne.playerCards, playerTwo.playerCards]})
+    const firstMove = deck.renderCard({
+      playersHands: [playerHand, pcHand],
+      trumpOfGame: trumpCard.suit
+    })
 
+    this.defineFirstMove(firstMove)
+
+    // ставим обработчик на карты игрока
+    const playerHandCards = document.querySelector('.playerHand').children
+
+    for (let i = 0; i < playerHandCards.length; i++) {
+      deck.addEvent(playerHandCards[i])
+    }
+
+    // const firstStep = this.firstStep(playerHand, pcHand)
+    // console.log(firstStep)
 
     // ===========================
     // console.log('выданные карты: ', deck.issuedCards)
@@ -44,6 +62,13 @@ class Board {
     // console.log('козыри: ', trumpCard)
   }
 
+  defineFirstMove(decision) {
+
+    if (decision === 'pc') {
+      console.log('FIRST-MOVE: ', decision)
+
+    }
+  }
 }
 
 export default new Board()

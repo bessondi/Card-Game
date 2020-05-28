@@ -9,7 +9,7 @@ export default class Deck extends Card {
   }
 
   generate() {
-    const suits = ['Clubs', 'Diamonds', 'Spades', 'Hearts'],
+    const suits = ['clubs', 'diamonds', 'spades', 'hearts'],
       ranks = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
       values = [6, 7, 8, 9, 10, 11, 12, 13, 14]
 
@@ -35,13 +35,13 @@ export default class Deck extends Card {
     }
   }
 
-  render(deck) {  // отрисовываем колоду
+  render(deck) { // отрисовываем колоду
     const $cardsDeck = document.querySelector('.deck')
     let trump
     let indent = 0
 
     deck.forEach((c, i, d) => {
-      const card = super.renderCard( {card: c} )
+      const card = super.renderCard({card: c})
 
       if (c === d[0]) { // первая карта в массиве
         trump = c
@@ -58,11 +58,11 @@ export default class Deck extends Card {
     return trump
   }
 
-
   // clear() {
   //   this.deckCards = []
   // }
   //
+  // eslint-disable-next-line max-len
   // deal() {  // выдаем 1 карту из начала колоды и помещаем ее в массив выданных карт
   //   let issueCard = this.deckCards.shift()
   //   this.issuedCards.push(issueCard)
