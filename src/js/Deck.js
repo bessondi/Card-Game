@@ -1,4 +1,5 @@
 import Card from '@/js/Card'
+import Board from '@/js/Board'
 
 
 export default class Deck extends Card {
@@ -58,15 +59,50 @@ export default class Deck extends Card {
     return trump
   }
 
-  // clear() {
-  //   this.deckCards = []
-  // }
-  //
-  // eslint-disable-next-line max-len
+  dealFirstCards(players) {
+    // выдаем по 6 карт каждому игроку
+    const playerOne = players[0]
+    const playerTwo = players[1]
+    playerOne.playerCards.push(...this.deckCards.slice(0, 6))
+    playerTwo.playerCards.push(...this.deckCards.slice(6, 12))
+
+    // удаляем 12 выданных карт из колоды и помещаем их в массив выданных карт
+    this.issuedCards.push(...this.deckCards.splice(0, 12))
+
+    // рендер колоды + 13 козырная карта
+    const trumpCard = this.render(this.deckCards) // объект
+    const trumpOfGame = document.querySelector('.trumpOfGame')
+    trumpOfGame.classList.add(`${trumpCard.suit}`)
+
+    // рендер карт игроков и определяем кто ходит первым
+    const playerHand = playerOne.playerCards
+    const pcHand = playerTwo.playerCards
+    const firstMove = this.renderCard({
+      playersHands: [playerHand, pcHand],
+      trumpOfGame: trumpCard.suit
+    })
+    Board.defineFirstMove(firstMove, trumpCard)
+
+    // ставим обработчик на карты игрока
+    const playerHandCards = document.querySelector('.playerHand').children
+    for (let i = 0; i < playerHandCards.length; i++) {
+      super.addListenerToCard(playerHandCards[i])
+    }
+  }
+
   // deal() {  // выдаем 1 карту из начала колоды и помещаем ее в массив выданных карт
   //   let issueCard = this.deckCards.shift()
   //   this.issuedCards.push(issueCard)
   //   return issueCard
+  // }
+
+  findMinValCard(cards, trump) {
+    return cards.filter(c => c.suit !== trump.suit)
+      .reduce((prev, curr) => prev.value < curr.value ? prev : curr )
+  }
+
+  // clear() {
+  //   this.deckCards = []
   // }
   //
   // replace() { // добавляем в начало колоды первую карту из выданных
@@ -82,4 +118,5 @@ export default class Deck extends Card {
   //     }
   //   }
   // }
+
 }

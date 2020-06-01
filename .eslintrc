@@ -12,10 +12,13 @@
     "require-jsdoc": "off",
     "eol-last": "off",
     "no-trailing-spaces": "off",
-    "one-var": "off",
     "padded-blocks": "off",
     "operator-linebreak": "off",
-    "indent": "off"
+    "indent": "off",
+    "one-var": "off",
+    "no-unused-vars": "warn",
+    "max-len": "off",
+    "space-before-blocks": "off"
   },
   "extends": ["eslint:recommended", "google"]
 }

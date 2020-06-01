@@ -1,7 +1,9 @@
-import Player from '@/js/Player'
+import DomListener from '@/js/DomListener'
+// import Round from '@/js/Round'
 
-export default class Card {
+export default class Card extends DomListener {
   constructor(suit, rank, value) {
+    super()
     this.suit = suit;
     this.rank = rank;
     this.value = value;
@@ -11,28 +13,21 @@ export default class Card {
     if (options) {
       const {playersHands, trumpOfGame, card} = options
 
-      const $card = document.createElement('div'),
-            $top = document.createElement('div'),
-            $bottom = document.createElement('div'),
-            $rank = document.createElement('span'),
-            $rankSuit = document.createElement('span'),
-            $suit = document.createElement('div')
-
       if (playersHands) {
         const [playerOneCards, playerTwoCards] = playersHands
 
         const minVal1 = []
         const minVal2 = []
 
-        playerOneCards.forEach((c, i, a) => {
-          const handOne = document.querySelector('.playerHand')
-          handOne.appendChild(this.renderCard({card: c}))
+        playerOneCards.forEach(c => {
+          document.querySelector('.playerHand')
+            .appendChild(this.renderCard({card: c}))
 
           c.suit === trumpOfGame ? minVal1.push(c.value) : null
         })
-        playerTwoCards.forEach((c, i, a) => {
-          const handTwo = document.querySelector('.pcHand')
-          handTwo.appendChild(this.renderCard({card: c}))
+        playerTwoCards.forEach(c => {
+          document.querySelector('.pcHand')
+            .appendChild(this.renderCard({card: c}))
 
           c.suit === trumpOfGame ? minVal2.push(c.value) : null
         })
@@ -52,8 +47,14 @@ export default class Card {
           return playerMinValueCard < pcMinValueCard ? 'player' : 'pc'
         }
       }
-
       if (card) {
+        const $card = document.createElement('div'),
+              $top = document.createElement('div'),
+              $bottom = document.createElement('div'),
+              $rank = document.createElement('span'),
+              $rankSuit = document.createElement('span'),
+              $suit = document.createElement('div')
+
         $card.classList.add('card', 'card__shirt')
         $top.classList.add('card__top')
         $bottom.classList.add('card__bottom')
@@ -67,7 +68,7 @@ export default class Card {
         const rankSuitCloneBottom = $rankSuit.cloneNode()
         rankCloneBottom.innerHTML = card.rank
 
-        // data for listener
+        // dataset for listener
         $card.dataset.rank = card.rank
         $card.dataset.suit = card.suit
         $card.dataset.value = card.value
@@ -82,25 +83,9 @@ export default class Card {
         $card.appendChild($suit)
         $card.appendChild($bottom)
 
-        // $card.addEventListener('click', (e)=>{
-        // eslint-disable-next-line max-len
-        //   console.log(e.currentTarget.dataset.value, e.currentTarget.dataset.suit)
-        // })
-
         return $card
       }
-    } else {
-      throw new Error('Cards is not has been received!')
     }
   }
 
-  // defineFirstMove() {
-  //
-  // }
-
-  addEvent(el) {
-    el.addEventListener('click', (e) => {
-      Player.move(e.currentTarget.dataset.value, e.currentTarget.dataset.suit)
-    })
-  }
 }

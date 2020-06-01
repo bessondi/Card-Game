@@ -45,12 +45,12 @@
     background: #dadada;
     overflow: scroll;
     display: grid;
-    grid-template-columns: minmax(200px, auto) 1fr minmax(200px, auto);
+    grid-template-columns: minmax(250px, auto) 1fr minmax(200px, auto);
     grid-template-rows: repeat(3, auto);
     gap: 20px;
     align-items: center;
     justify-items: center;
-    grid-template-areas: "trump pc ." "deck table discard" ". player btn";
+    grid-template-areas: "trump pc ." "deck table discard" "btn player .";
 
 
     .card {
@@ -74,9 +74,9 @@
       }
 
       &__shirt:not(.card__trump) {
-        //background-color: #555;
-        //background-image: url("../assets/svg/suits.svg");
-        //background-repeat: no-repeat;
+        background-color: #555;
+        background-image: url("../assets/svg/suits.svg");
+        background-repeat: no-repeat;
       }
 
       &__top {
@@ -119,7 +119,7 @@
       }
 
       &.card__shirt:not(.card__trump) > * {
-        //visibility: hidden;
+        visibility: hidden;
       }
     }
 
@@ -196,6 +196,8 @@
 
     .actionBtn {
       grid-area: btn;
+      position: relative;
+      left: 10px;
       visibility: hidden;
       width: 150px;
       height: 50px;
@@ -210,6 +212,19 @@
       &:hover {
         background: gray;
       }
+
+      &.active {
+        visibility: visible;
+        cursor: pointer;
+        &:active {
+          background: darkgray;
+        }
+      }
+      &.playerAttack {
+        visibility: visible;
+        background: none;
+        color: #000;
+      }
     }
 
     .trumpOfGame {
@@ -218,8 +233,8 @@
       //top: 10px;
       right: 5px;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      //align-items: center;
+      //justify-content: center;
       width: 50px;
       height: 50px;
       //border: 1px solid #000;
