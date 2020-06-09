@@ -1,35 +1,32 @@
-// import DomListener from '@/js/DomListener'
+import DomListener from '@/js/DomListener'
 
-export default class Round {
-  constructor(card) {
-    // super()
-    this.initialState = []
-    this.statusOfGame
-    this.card = card
-    this.roundState = {
-      player: [],
-      pc: []
-    }
+export default class Table extends DomListener {
+  constructor() {
+    super()
+
+    this.table = document.querySelector('.table')
+    this.cards = this.table.getElementsByClassName('card')
+
+    this.playerCards = []
+    this.pcCards = []
   }
 
 
-  update(who, action) {
-    const table = document.querySelector('.table')
-    const actionBtn = document.querySelector('.actionBtn')
+  update(who, action, card) {
 
-    // console.log(this.card)
+    super.addListenerToTable( this.table )
+    const actionBtn = document.querySelector('.actionBtn')
 
     if (who === 'pc') {
       switch (action) {
-
         case 'attack':
           setTimeout(() => {
-            table.appendChild(this.card)
-            this.roundState.pc.push(this.card)
+            this.table.appendChild(card)
+            this.pcCards.push(card)
 
             actionBtn.innerHTML = 'ВЗЯТЬ'
             actionBtn.classList.toggle('active')
-            this.statusOfGame = 'attack'
+            // this.statusOfGame = 'attack'
           }, 200)
         break
 
@@ -38,34 +35,34 @@ export default class Round {
       //   break
         //
         // case 'finish':
-        //   this.roundState[who] = this.initialState
+        //   this.roundCards[who] = this.initialState
       //   break
         //
         // default:
-        //   this.roundState[who] = this.initialState
+        //   this.roundCards[who] = this.initialState
       }
     }
-    //
+
+
     if (who === 'player') {
       switch (action) {
-
-        case 'attack':
+        case 'waitAttack':
           actionBtn.innerHTML = 'ВАШ ХОД!'
           actionBtn.classList.add('playerAttack')
-          this.statusOfGame = 'attack'
-          this.roundState.player.push(this.card)
-        break
+          // this.statusOfGame = 'attack'
+          // this.playerCards.push(card)
+          break
 
         case 'defend':
           this.statusOfGame = 'defend'
         break
 
         // case 'finish':
-        //   // this.round = --this.round
+        //   // this.table = --this.table
       //   break
         //
         // default:
-        //   this.roundState[who] = this.initialState
+        //   this.roundCards[who] = this.initialState
       }
     }
 

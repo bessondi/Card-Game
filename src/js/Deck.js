@@ -1,12 +1,12 @@
 import Card from '@/js/Card'
-import Board from '@/js/Board'
+// import Board from '@/js/Board'
 
 
 export default class Deck extends Card {
   constructor() {
     super()
     this.deckCards = [] // карты в колоде
-    this.issuedCards = [] // выданные на руки карты
+    this.issuedCards = [] // выданные карты
   }
 
   generate() {
@@ -77,30 +77,31 @@ export default class Deck extends Card {
     // рендер карт игроков и определяем кто ходит первым
     const playerHand = playerOne.playerCards
     const pcHand = playerTwo.playerCards
-    const firstMove = this.renderCard({
+    const firstMove = super.renderCard({
       playersHands: [playerHand, pcHand],
       trumpOfGame: trumpCard.suit
     })
-    Board.defineFirstMove(firstMove, trumpCard)
 
     // ставим обработчик на карты игрока
     const playerHandCards = document.querySelector('.playerHand').children
     for (let i = 0; i < playerHandCards.length; i++) {
       super.addListenerToCard(playerHandCards[i])
     }
-  }
 
-  // deal() {  // выдаем 1 карту из начала колоды и помещаем ее в массив выданных карт
-  //   let issueCard = this.deckCards.shift()
-  //   this.issuedCards.push(issueCard)
-  //   return issueCard
-  // }
+    return {firstMove: firstMove, trumpCard: trumpCard}
+  }
 
   findMinValCard(cards, trump) {
     return cards.filter(c => c.suit !== trump.suit)
       .reduce((prev, curr) => prev.value < curr.value ? prev : curr )
   }
 
+  // deal() { // выдаем 1 карту из начала колоды и помещаем ее в массив выданных карт
+  //   const issueCard = this.deckCards.shift()
+  //   this.issuedCards.push(issueCard)
+  //   return issueCard
+  // }
+  //
   // clear() {
   //   this.deckCards = []
   // }
@@ -108,8 +109,8 @@ export default class Deck extends Card {
   // replace() { // добавляем в начало колоды первую карту из выданных
   //   console.log(this.deckCards.unshift(this.issuedCards.shift()))
   // }
-//
-// print() {
+  //
+  // print() {
   //   if (!this.deckCards.length) {
   //     console.log('Колода не сформирована')
   //   } else {

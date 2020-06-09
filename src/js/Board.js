@@ -1,6 +1,6 @@
 import Player from '@/js/Player'
 import Deck from '@/js/Deck'
-import Round from '@/js/Round'
+import Table from '@/js/Table'
 import DomListener from '@/js/DomListener'
 // import Discard from '@/js/Discard'
 
@@ -8,9 +8,9 @@ import DomListener from '@/js/DomListener'
 class Board extends DomListener {
   constructor() {
     super()
-    this.players = [] // игроки
-    this.deck = new Deck() // колода
-    this.rounds = [] // раунды
+    this.players = [] // игроки -> карты в []  .playerCards
+    this.deck = new Deck() // колода -> карты в []  .deckCards   // выданные на руки []  .issuedCards
+    this.table = new Table() // стол
     // this.discard = new Discard // бито
   }
 
@@ -19,10 +19,17 @@ class Board extends DomListener {
 
     this.deck.generate()
     this.deck.shuffle()
-    this.deck.dealFirstCards(this.players)
+
+    const firstCards = this.deck.dealFirstCards(this.players)
+    this.defineFirstMove(firstCards.firstMove, firstCards.trumpCard)
   }
 
   defineFirstMove(decision, trump) {
+
+    // добавляем слушатель на игровую доску
+    // const tableCard =
+    //   super.addListenerToTable( document.querySelector('.table') )
+
 
     if (decision === 'pc') {
       console.log('FIRST-MOVE: ', decision)
@@ -32,42 +39,39 @@ class Board extends DomListener {
 
       // pc ходит этой картой
       const $firstCard = this.players[1].pcFirstStep(min)
-      this.beginRound( new Round($firstCard) )
-      this.action(decision, 'attack')
+      this.table.update(decision, 'attack', $firstCard)
+      // this.pcTurn()
     }
 
     if (decision === 'player') {
-      const $choice = document.querySelector('.table').childNodes
-      this.beginRound( new Round($choice) )
-      this.action(decision, 'attack')
+      // const $choice = document.querySelector('.table').childNodes
+      this.table.update(decision, 'waitAttack')
+      // this.playerTurn()
     }
+  }
+
+  playerTurn() {
+
+  }
+
+  pcTurn() {
+
   }
 
   //
 
-  beginRound(round) {
-    this.rounds.push(round)
-  }
-  action(who, action) {
-    this.rounds.forEach(round => {
-      round.update(who, action)
-    })
-  }
-  // finishRound(round) {
-  //   this.rounds = this.rounds.filter(r => r !== round)
+
+  // beginRound(table) {
+  //   this.rounds.push(table)
   // }
-
-
+  // action(who, action) {
+  //   this.rounds.forEach(table => {
+  //     table.update(who, action)
+  //   })
+  // }
+  // finishRound(table) {
+  //   this.rounds = this.rounds.filter(r => r !== table)
+  // }
 }
 
 export default new Board()
-
-// ============================================
-// const game = new Board()
-// const r1 = new Round()
-//
-// game.beginRound(r1)
-// game.action('')
-// console.log(r1.round)
-// export default game
-// ============================================

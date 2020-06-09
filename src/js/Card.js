@@ -1,5 +1,5 @@
 import DomListener from '@/js/DomListener'
-// import Round from '@/js/Round'
+// import Table from '@/js/Table'
 
 export default class Card extends DomListener {
   constructor(suit, rank, value) {
