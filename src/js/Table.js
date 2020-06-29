@@ -9,12 +9,15 @@ export default class Table extends DomListener {
 
     this.playerCards = []
     this.pcCards = []
+    this.stateCards = []
+    this.receiver = undefined
+    this.turn = ''
   }
 
 
   update(who, action, card) {
 
-    super.addListenerToTable( this.table )
+    // super.addListenerToTable( this.table )
     const actionBtn = document.querySelector('.actionBtn')
 
     if (who === 'pc') {
@@ -22,10 +25,14 @@ export default class Table extends DomListener {
         case 'attack':
           setTimeout(() => {
             this.table.appendChild(card)
+
+            // this.receiver = super.receive(card, who, 'player')
+            this.turn = 'player'
             this.pcCards.push(card)
 
             actionBtn.innerHTML = 'ВЗЯТЬ'
             actionBtn.classList.toggle('active')
+
             // this.statusOfGame = 'attack'
           }, 200)
         break
@@ -43,19 +50,21 @@ export default class Table extends DomListener {
       }
     }
 
-
     if (who === 'player') {
       switch (action) {
-        case 'waitAttack':
+        case 'attack':
           actionBtn.innerHTML = 'ВАШ ХОД!'
           actionBtn.classList.add('playerAttack')
-          // this.statusOfGame = 'attack'
-          // this.playerCards.push(card)
-          break
 
-        case 'defend':
-          this.statusOfGame = 'defend'
+          this.turn = 'pc'
+          // this.playerCards.push(card)
+
+          // this.statusOfGame = 'attack'
         break
+
+        // case 'defend':
+        //   this.statusOfGame = 'defend'
+        // break
 
         // case 'finish':
         //   // this.table = --this.table
@@ -70,6 +79,8 @@ export default class Table extends DomListener {
     // if (table.childNodes) {
     //   this.checker(table.childNodes)
     // }
+
+
   }
 
   // static checker(card) {
@@ -81,5 +92,6 @@ export default class Table extends DomListener {
   //     }
   //   }
   // }
+
 
 }

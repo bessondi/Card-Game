@@ -85,7 +85,7 @@ export default class Deck extends Card {
     // ставим обработчик на карты игрока
     const playerHandCards = document.querySelector('.playerHand').children
     for (let i = 0; i < playerHandCards.length; i++) {
-      super.addListenerToCard(playerHandCards[i])
+      super.addListenerToCard(playerHandCards[i], trumpCard.suit)
     }
 
     return {firstMove: firstMove, trumpCard: trumpCard}

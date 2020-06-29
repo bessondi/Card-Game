@@ -2,7 +2,7 @@ import Player from '@/js/Player'
 import Deck from '@/js/Deck'
 import Table from '@/js/Table'
 import DomListener from '@/js/DomListener'
-// import Discard from '@/js/Discard'
+import Discard from '@/js/Discard'
 
 
 class Board extends DomListener {
@@ -11,7 +11,8 @@ class Board extends DomListener {
     this.players = [] // игроки -> карты в []  .playerCards
     this.deck = new Deck() // колода -> карты в []  .deckCards   // выданные на руки []  .issuedCards
     this.table = new Table() // стол
-    // this.discard = new Discard // бито
+    this.discard = new Discard() // бито
+    this.turn = ''
   }
 
   create(playerName, pcName) {
@@ -21,44 +22,74 @@ class Board extends DomListener {
     this.deck.shuffle()
 
     const firstCards = this.deck.dealFirstCards(this.players)
-    this.defineFirstMove(firstCards.firstMove, firstCards.trumpCard)
+    // this.table.turn = firstCards.firstMove
+    // this.defineFirstMove(firstCards.firstMove, firstCards.trumpCard)
+    // this.table.register(this.players)
+
+    const firstMove = firstCards.firstMove
+    const trumpSuit = firstCards.trumpCard
+
+    if (firstMove === 'pc') {
+      // console.log('FIRST-MOVE: ', decision)
+      this.pcTurn(firstMove, trumpSuit)
+    }
+    // else if (firstMove === 'player') {
+    //   this.playerTurn(firstMove)
+    // }
   }
 
-  defineFirstMove(decision, trump) {
+  // playerTurn(decision) {
+  //   this.table.update(decision, 'attack')
+  // }
 
-    // добавляем слушатель на игровую доску
-    // const tableCard =
-    //   super.addListenerToTable( document.querySelector('.table') )
+  pcTurn(decision, trump) {
+    // младшая не козырная карта, которой можно сходить
+    const min = this.deck.findMinValCard(this.players[1].playerCards, trump)
 
+    // pc ходит этой картой
+    const $firstCard = this.players[1].pcFirstStep(min)
+    this.table.update(decision, 'attack', $firstCard)
+    this.cardChecker($firstCard, 'pc', trump.suit)
+  }
 
-    if (decision === 'pc') {
-      console.log('FIRST-MOVE: ', decision)
+  cardChecker(card, p, trump) {
 
-      // младшая не козырная карта, которой можно сходить
-      const min = this.deck.findMinValCard(this.players[1].playerCards, trump)
+    console.log(card)
+    // console.log(trump)
+    const cardsForDefer = []
+    let playerCards
 
-      // pc ходит этой картой
-      const $firstCard = this.players[1].pcFirstStep(min)
-      this.table.update(decision, 'attack', $firstCard)
-      // this.pcTurn()
+    if (p === 'player') {
+      playerCards = this.players[1].playerCards
+    } else if (p === 'pc') {
+      playerCards = this.players[0].playerCards
+
+      // убрать выброшенную карту
+      // playerCards = playerCards.filter( (c) => c.rank !== card.dataset.rank && c.value !== card.dataset.value )
     }
 
-    if (decision === 'player') {
-      // const $choice = document.querySelector('.table').childNodes
-      this.table.update(decision, 'waitAttack')
-      // this.playerTurn()
+    console.log( playerCards )
+
+    for (let c = 0; c < playerCards.length; c++) {
+      if (
+        // козырные карты рангом выше
+        trump === playerCards[c].suit
+        && playerCards[c].value > card.dataset.value
+
+        // карты по масти рангом выше
+        || card.dataset.suit === playerCards[c].suit
+        && playerCards[c].value > card.dataset.value
+
+        // выбрать козырные, если нет по масти рангом выше
+        || card.dataset.suit !== trump
+        && trump === playerCards[c].suit
+      ) {
+        cardsForDefer.push(playerCards[c])
+      }
     }
+    console.log(cardsForDefer)
+    return cardsForDefer
   }
-
-  playerTurn() {
-
-  }
-
-  pcTurn() {
-
-  }
-
-  //
 
 
   // beginRound(table) {

@@ -73,10 +73,11 @@
         right: -20px;
       }
 
+      // рубашки карт
       &__shirt:not(.card__trump) {
-        background-color: #555;
-        background-image: url("../assets/svg/suits.svg");
-        background-repeat: no-repeat;
+        //background-color: #555;
+        //background-image: url("../assets/svg/suits.svg");
+        //background-repeat: no-repeat;
       }
 
       &__top {
@@ -118,8 +119,9 @@
         @extend %suitSize;
       }
 
+      // рубашки карт
       &.card__shirt:not(.card__trump) > * {
-        visibility: hidden;
+        //visibility: hidden;
       }
     }
 

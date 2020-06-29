@@ -17,7 +17,17 @@ export default class Player {
     return result
   }
 
-  playerFirstStep() {
 
-  }
+  // playerFirstStep() {
+  //
+  // }
+
+  // send(message, to) {
+  //   this.table.send(message, this, to)
+  // }
+  //
+  // receive(message, from) {
+  //   console.log(`${from.name} => ${this.name}: ${message}`)
+  // }
+
 }
