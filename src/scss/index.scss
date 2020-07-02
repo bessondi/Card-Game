@@ -1,5 +1,10 @@
 @import '~normalize.css';
 
+// colors
+$backgroundColor: #606060; // #a1a1a1;
+$bodyColor: #949494; // #dadada;
+$cardColor: #b7b7b7; // fff;
+
 
 %suitSize {
   width: 40px;
@@ -30,8 +35,9 @@
   filter: invert(21%) sepia(90%) saturate(7396%) hue-rotate(358deg) brightness(106%) contrast(118%);
 }
 
+
 .game {
-  background: #a1a1a1;
+  background: $backgroundColor;
   width: 100%;
   height: 100vh;
   display: flex;
@@ -42,7 +48,7 @@
     width: 90%;
     height: 90%;
     border-radius: 50px;
-    background: #dadada;
+    background: $bodyColor;
     overflow: scroll;
     display: grid;
     grid-template-columns: minmax(250px, auto) 1fr minmax(200px, auto);
@@ -63,7 +69,7 @@
       height: 120px;
       padding: 5px;
       margin: 5px;
-      background: #fff;
+      background: $cardColor;
       border: 2px solid black;
       border-radius: 10px;
 
@@ -142,7 +148,7 @@
 
       & .card {
         position: static;
-        background: #fff;
+        background: $cardColor;
       }
 
       & > .card.card__shirt > * {
@@ -184,7 +190,7 @@
       }
 
       & > .card {
-        background: #fff;
+        background: $cardColor;
         cursor: pointer;
         //transform: translateY(1px);
         //transition: transform .3s;

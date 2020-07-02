@@ -8,18 +8,33 @@ export default class DomListener {
     // const check = Table.checker(card)
     // if (!check) {
     // const ctx = this
+
     card.addEventListener('click', addCardToField)
 
     function addCardToField() {
-      const table = document.querySelector('.table')
-      table.appendChild(card)
-      document.querySelector('.actionBtn').classList.remove('playerAttack')
-      // DomListener.getPlayerCard(card)
-      card.removeEventListener('click', addCardToField)
+
+      const cardsForDefer =
+        Board.cardChecker(card, 'player', trump)
+      console.log(cardsForDefer)
+
+      // for (let c = 0; c < cardsForDefer.length; c++) {
+      //
+      //   if (cardsForDefer[c].suit === card.dataset.suit && cardsForDefer[c].rank === card.dataset.rank) {
+      //     console.log('sdgshdjfkgjhgfdeswq')
+      //
+      //     const table = document.querySelector('.table')
+      //     table.appendChild(card)
+      //     document.querySelector('.actionBtn').classList.remove('playerAttack')
+      //     // DomListener.getPlayerCard(card)
+      //     card.removeEventListener('click', addCardToField)
+      //   }
+      //   }
+
+
+      // Board.cardChecker(card, 'player', trump)
+    }
 
       // ctx.receive(card, 'player', 'pc')
-      Board.cardChecker(card, 'player', trump)
-    }
     // }
   }
 

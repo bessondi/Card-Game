@@ -12,26 +12,20 @@ class Board extends DomListener {
     this.deck = new Deck() // колода -> карты в []  .deckCards   // выданные на руки []  .issuedCards
     this.table = new Table() // стол
     this.discard = new Discard() // бито
-    this.turn = ''
   }
 
   create(playerName, pcName) {
     this.players.push(new Player(playerName), new Player(pcName))
-
     this.deck.generate()
     this.deck.shuffle()
-
-    const firstCards = this.deck.dealFirstCards(this.players)
+    const round = this.deck.dealFirstCards(this.players)
     // this.table.turn = firstCards.firstMove
     // this.defineFirstMove(firstCards.firstMove, firstCards.trumpCard)
     // this.table.register(this.players)
 
-    const firstMove = firstCards.firstMove
-    const trumpSuit = firstCards.trumpCard
 
-    if (firstMove === 'pc') {
-      // console.log('FIRST-MOVE: ', decision)
-      this.pcTurn(firstMove, trumpSuit)
+    if (round.firstTurn === 'pc') {
+      this.pcTurn(round.trumpSuit)
     }
     // else if (firstMove === 'player') {
     //   this.playerTurn(firstMove)
@@ -42,21 +36,22 @@ class Board extends DomListener {
   //   this.table.update(decision, 'attack')
   // }
 
-  pcTurn(decision, trump) {
+  pcTurn(trump) {
     // младшая не козырная карта, которой можно сходить
     const min = this.deck.findMinValCard(this.players[1].playerCards, trump)
 
     // pc ходит этой картой
     const $firstCard = this.players[1].pcFirstStep(min)
-    this.table.update(decision, 'attack', $firstCard)
-    this.cardChecker($firstCard, 'pc', trump.suit)
+    this.table.update('pc', 'attack', $firstCard)
+    // this.cardChecker($firstCard, 'pc', trump.suit)
   }
 
   cardChecker(card, p, trump) {
 
     console.log(card)
     // console.log(trump)
-    const cardsForDefer = []
+    // const cardsForDefer = []
+    this.table.cardsForDefer = []
     let playerCards
 
     if (p === 'player') {
@@ -68,7 +63,7 @@ class Board extends DomListener {
       // playerCards = playerCards.filter( (c) => c.rank !== card.dataset.rank && c.value !== card.dataset.value )
     }
 
-    console.log( playerCards )
+    // console.log( playerCards )
 
     for (let c = 0; c < playerCards.length; c++) {
       if (
@@ -84,12 +79,38 @@ class Board extends DomListener {
         || card.dataset.suit !== trump
         && trump === playerCards[c].suit
       ) {
-        cardsForDefer.push(playerCards[c])
+        this.table.cardsForDefer.push(playerCards[c])
+        // cardsForDefer.push(playerCards[c])
       }
     }
-    console.log(cardsForDefer)
-    return cardsForDefer
+
+    // console.log(this.table.cardsForDefer)
+    return this.table.cardsForDefer
+
+    // console.log(cardsForDefer)
+    // return cardsForDefer
   }
+
+  // addListenerToCard(card, trump) {
+  //   // super.addListenerToCard(card, trump, this.cardsForDefer);
+  //
+  //   card.addEventListener('click', addCardToField)
+  //   const ctx = this
+  //
+  //   function addCardToField() {
+  //
+  //     // const cardsForDefer =
+  //     // Board.cardChecker(card, 'player', trump)
+  //     // console.log(cardsForDefer)
+  //
+  //     // if (cardsForDefer) {
+  //     // const table = document.querySelector('.table')
+  //     ctx.table.appendChild(card)
+  //     document.querySelector('.actionBtn').classList.remove('playerAttack')
+  //     // DomListener.getPlayerCard(card)
+  //     card.removeEventListener('click', addCardToField)
+  //     }
+  // }
 
 
   // beginRound(table) {

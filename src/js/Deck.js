@@ -6,7 +6,7 @@ export default class Deck extends Card {
   constructor() {
     super()
     this.deckCards = [] // карты в колоде
-    this.issuedCards = [] // выданные карты
+    // this.issuedCards = [] // выданные карты
   }
 
   generate() {
@@ -36,65 +36,103 @@ export default class Deck extends Card {
     }
   }
 
-  render(deck) { // отрисовываем колоду
+  dealCards(player, count) {
+    // if (player === player[0]) {
+    //   super.addListenerToCard(playerHandCards[i], trumpCard.suit)
+    // }
+
+    player.playerCards.push(...this.deckCards.splice(0, count))
+
+    // удаляем 12 выданных карт из колоды и помещаем их в массив выданных карт
+    // this.issuedCards.push(...this.deckCards.splice(0, 12))
+  }
+
+  renderDeck(deck) { // отрисовываем колоду
     const $cardsDeck = document.querySelector('.deck')
-    let trump
     let indent = 0
 
     deck.forEach((c, i, d) => {
-      const card = super.renderCard({card: c})
+      const card = super.renderCard(c)
 
-      if (c === d[0]) { // первая карта в массиве
-        trump = c
+      if (c === d[0]) { // первая карта в массиве, дом-колоде (визуально последняя)
         card.classList.add('card__trump')
       } else {
-        card.style.right = `${indent}em`
+        card.style.right = `${indent}em` // остальная колода
         card.style.bottom = `${indent}em`
         indent += 0.02
       }
 
       $cardsDeck.appendChild(card)
     })
-
-    return trump
   }
 
   dealFirstCards(players) {
-    // выдаем по 6 карт каждому игроку
-    const playerOne = players[0]
-    const playerTwo = players[1]
-    playerOne.playerCards.push(...this.deckCards.slice(0, 6))
-    playerTwo.playerCards.push(...this.deckCards.slice(6, 12))
+    // выдаем по 6 карт каждому игроку из deckCards
+    const [playerOne, playerTwo] = players
+    this.dealCards(playerOne, 6)
+    this.dealCards(playerTwo, 6)
 
-    // удаляем 12 выданных карт из колоды и помещаем их в массив выданных карт
-    this.issuedCards.push(...this.deckCards.splice(0, 12))
+    // рендерим колоду
+    this.renderDeck(this.deckCards) // массив карт-объектов
 
-    // рендер колоды + 13 козырная карта
-    const trumpCard = this.render(this.deckCards) // объект
-    const trumpOfGame = document.querySelector('.trumpOfGame')
-    trumpOfGame.classList.add(`${trumpCard.suit}`)
+    // определяем козырь по первой (13й) карте после всех выданных
+    const trumpCard = this.deckCards[0]
+    const $trumpOfGame = document.querySelector('.trumpOfGame')
+    $trumpOfGame.classList.add(`${trumpCard.suit}`)
 
-    // рендер карт игроков и определяем кто ходит первым
-    const playerHand = playerOne.playerCards
-    const pcHand = playerTwo.playerCards
-    const firstMove = super.renderCard({
-      playersHands: [playerHand, pcHand],
+    // определяем кто ходит первым
+    const firstTurn = this.firstTurnDefine({
+      hands: [playerOne.playerCards, playerTwo.playerCards],
       trumpOfGame: trumpCard.suit
     })
 
     // ставим обработчик на карты игрока
-    const playerHandCards = document.querySelector('.playerHand').children
-    for (let i = 0; i < playerHandCards.length; i++) {
-      super.addListenerToCard(playerHandCards[i], trumpCard.suit)
-    }
+    super.addPlayerCardsListener(trumpCard)
 
-    return {firstMove: firstMove, trumpCard: trumpCard}
+    return {firstTurn: firstTurn, trumpSuit: trumpCard}
+  }
+
+  firstTurnDefine(options) {
+    const {hands, trumpOfGame} = options
+    const [playerOneCards, playerTwoCards] = hands
+
+    const minVal1 = []
+    const minVal2 = []
+
+    playerOneCards.forEach(c => {
+      document.querySelector('.playerHand')
+        .appendChild(this.renderCard(c))
+
+      c.suit === trumpOfGame ? minVal1.push(c.value) : null
+    })
+    playerTwoCards.forEach(c => {
+      document.querySelector('.pcHand')
+        .appendChild(this.renderCard(c))
+
+      c.suit === trumpOfGame ? minVal2.push(c.value) : null
+    })
+
+    const playerMinValueCard = Math.min(...minVal1)
+    const pcMinValueCard = Math.min(...minVal2)
+
+    // console.log(`Di - ${playerMinValueCard} // Pc - ${pcMinValueCard}`)
+
+    if (playerMinValueCard === Infinity && pcMinValueCard === Infinity) {
+      return 'player'
+    } else if (playerMinValueCard === Infinity) {
+      return 'pc'
+    } else if (pcMinValueCard === Infinity) {
+      return 'player'
+    } else {
+      return playerMinValueCard < pcMinValueCard ? 'player' : 'pc'
+    }
   }
 
   findMinValCard(cards, trump) {
     return cards.filter(c => c.suit !== trump.suit)
-      .reduce((prev, curr) => prev.value < curr.value ? prev : curr )
+      .reduce((prev, curr) => prev.value < curr.value ? prev : curr)
   }
+
 
   // deal() { // выдаем 1 карту из начала колоды и помещаем ее в массив выданных карт
   //   const issueCard = this.deckCards.shift()

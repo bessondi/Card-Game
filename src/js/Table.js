@@ -9,9 +9,10 @@ export default class Table extends DomListener {
 
     this.playerCards = []
     this.pcCards = []
-    this.stateCards = []
-    this.receiver = undefined
-    this.turn = ''
+    // this.stateCards = []
+    // this.receiver = undefined
+    // this.turn = ''
+    this.cardsForDefer = []
   }
 
 
@@ -83,6 +84,7 @@ export default class Table extends DomListener {
 
   }
 
+
   // static checker(card) {
   //   const table = document.querySelector('.table').childNodes
   //   for (let i = 0; i < table.length; i++) {
@@ -92,6 +94,5 @@ export default class Table extends DomListener {
   //     }
   //   }
   // }
-
 
 }
