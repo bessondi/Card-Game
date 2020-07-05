@@ -6,8 +6,8 @@ export default class Deck extends Card {
     super()
     this.deckCards = [] // карты в колоде
     this.cardsForDefer = [] // карты для защиты
-    // this.issuedCards = [] // выданные карты
-
+    this.deckDiscard = [] // бито
+    this.$discard = document.querySelector('.discard')
     this.$playerHand = document.querySelector('.playerHand')
     this.$pcHand = document.querySelector('.pcHand')
   }

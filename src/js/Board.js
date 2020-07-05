@@ -1,7 +1,6 @@
 import Player from '@/js/Player'
 import Deck from '@/js/Deck'
 import DomListener from '@/js/DomListener'
-import Discard from '@/js/Discard'
 
 
 class Board extends DomListener {
@@ -10,7 +9,6 @@ class Board extends DomListener {
     this.players = [] // игроки -> карты в []  .playerCards --- [0] - player, [1] - pc
     this.deck = new Deck() // колода -> карты в []  .deckCards   // выданные на руки []  .issuedCards
     // this.table = new Table() // стол
-    this.discard = new Discard() // бито
     this.turn = ''
   }
 
@@ -25,13 +23,11 @@ class Board extends DomListener {
     if (this.turn === 'pc') {
       this.pcFirstTurn(round.trumpSuit)
     } else if (this.turn === 'player') {
-      // this.playerTurn()
+      Player.attack()
     }
   }
 
   cardsForDeferChecker($card, trumpSuit) {
-    // console.log($card)
-    // const $tableCards = document.querySelector('.table').childNodes.length
 
     this.deck.cardsForDefer = []
     let playerCards
@@ -90,72 +86,51 @@ class Board extends DomListener {
     this.turn = 'player'
   }
 
-  playerTurn($clickedCard, deckTrumpCard) {
-
-    const $table = document.querySelector('.table')
-    const $actionBtn = document.querySelector('.actionBtn')
-
-    $clickedCard.addEventListener('click', addCardToTable)
+  playerTurn($clickedCard) {
     const that = this
 
-    function addCardToTable() {
-      // console.log(that.turn)
-      // console.log(this)
 
+    const $actionBtn = document.querySelector('.actionBtn')
+    $actionBtn.addEventListener('click', addCardsToDiscard)
+    function addCardsToDiscard(){
+
+      that.deckDiscard.push()
+
+      $actionBtn.removeEventListener('click', addCardsToDiscard)
+    }
+
+
+    $clickedCard.addEventListener('click', addCardToTable)
+    function addCardToTable() {
+      function takeStep() {
+        // сходить одной картой
+        Player.attack('player', $clickedCard)
+        $clickedCard.removeEventListener('click', addCardToTable)
+
+        // // меняем ход на pc для следующего хода
+        that.turn = 'pc'
+
+        // добавить защиту картой для pc
+      }
+
+      // определяем возможные карты для защиты которыми можно ответить
       for (let c = 0; c < that.deck.cardsForDefer.length; c++) {
         if (
           that.deck.cardsForDefer[c].suit === $clickedCard.dataset.suit
           && that.deck.cardsForDefer[c].rank === $clickedCard.dataset.rank
+          && that.turn === 'player'
         ) {
-          // console.log('возможные карты')
-          $table.appendChild($clickedCard)
-          $actionBtn.classList.remove('playerAttack')
-          $clickedCard.removeEventListener('click', addCardToTable)
+          takeStep()
         }
       }
 
+      // ходим любой картой
       if (that.deck.cardsForDefer.length === 0 && that.turn === 'player') {
-        // console.log('любая карта')
-        $table.appendChild($clickedCard)
-        $actionBtn.classList.remove('playerAttack')
-        $clickedCard.removeEventListener('click', addCardToTable)
-        // that.turn === 'pc'
+        takeStep()
       }
     }
   }
 
-
-  // addListenerToCard(card, trump) {
-  //   // super.addListenerToCard(card, trump, this.cardsForDefer);
-  //
-  //   card.addEventListener('click', addCardToField)
-  //   const ctx = this
-  //
-  //   function addCardToField() {
-  //
-  //     // const cardsForDefer =
-  //     // Board.cardsForDeferChecker(card, 'player', trump)
-  //     // console.log(cardsForDefer)
-  //
-  //     // if (cardsForDefer) {
-  //     // const table = document.querySelector('.table')
-  //     ctx.table.appendChild(card)
-  //     document.querySelector('.actionBtn').classList.remove('playerAttack')
-  //     // DomListener.getPlayerCard(card)
-  //     card.removeEventListener('click', addCardToField)
-  //     }
-  // }
-  // beginRound(table) {
-  //   this.rounds.push(table)
-  // }
-  // action(who, action) {
-  //   this.rounds.forEach(table => {
-  //     table.update(who, action)
-  //   })
-  // }
-  // finishRound(table) {
-  //   this.rounds = this.rounds.filter(r => r !== table)
-  // }
 }
 
 export default new Board()

@@ -4,53 +4,45 @@ export default class Player {
     this.playerCards = [];
   }
 
-  static attack(who, $card) {
+  static attack(turn, $card) {
     const $table = document.querySelector('.table')
     const $actionBtn = document.querySelector('.actionBtn')
+    $actionBtn.classList.add('active')
 
-    if (who === 'pc') {
-      // const cards = []
+    switch (turn) {
+      case 'pc':
+        setTimeout(() => {
+          $table.appendChild($card)
+          $actionBtn.innerHTML = 'ВЗЯТЬ'
+        }, 200)
+        break
 
-      setTimeout(() => {
+      case 'player':
         $table.appendChild($card)
-        // cards.push(card)
+        $actionBtn.innerHTML = 'БИТО!'
+        break
 
-        $actionBtn.innerHTML = 'ВЗЯТЬ'
-        $actionBtn.classList.toggle('active')
-
-        // this.statusOfGame = 'attack'
-      }, 200)
+      default: $actionBtn.innerHTML = 'ВАШ ХОД!'
+        break
     }
 
-    // if (who === 'player') {}
-
-    }
-
-  static defer(who, $card) {
-
+    // if (turn === 'waiting') {
+    //   $actionBtn.innerHTML = 'ВАШ ХОД!'
+    //   $actionBtn.classList.toggle('active')
+    // }
+    //
+    // if (turn === 'pc') {
+    //   setTimeout(() => {
+    //     $table.appendChild($card)
+    //     $actionBtn.innerHTML = 'ВЗЯТЬ'
+    //   }, 200)
+    // }
+    //
+    // if (turn === 'player') {
+    //   $table.appendChild($card)
+    //   $actionBtn.innerHTML = 'БИТО!'
+    //   $actionBtn.classList.toggle('active')
+    // }
   }
-
-  // pc take a step
-  // pcFirstStep(card) {
-  //   const $pcHandCards = document.querySelector('.pcHand').children
-  //   let result
-  //   for (let i = 0; i < $pcHandCards.length; i++) {
-  //     if ($pcHandCards[i].dataset.rank === card.rank
-  //       && $pcHandCards[i].dataset.suit === card.suit) {
-  //       result = $pcHandCards[i]
-  //     }
-  //   }
-  //   return result
-  // }
-  // playerFirstStep() {
-  //
-  // }
-  // send(message, to) {
-  //   this.table.send(message, this, to)
-  // }
-  //
-  // receive(message, from) {
-  //   console.log(`${from.name} => ${this.name}: ${message}`)
-  // }
 
 }

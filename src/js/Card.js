@@ -48,7 +48,7 @@ export default class Card extends DomListener {
 
     if (trump) {
       // super.addListenerToCard($card, trump)
-      Board.playerTurn($card, trump.suit)
+      Board.playerTurn($card)
     }
 
     return $card
