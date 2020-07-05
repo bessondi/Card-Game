@@ -1,12 +1,15 @@
 import Card from '@/js/Card'
-// import Board from '@/js/Board'
 
 
 export default class Deck extends Card {
   constructor() {
     super()
     this.deckCards = [] // карты в колоде
+    this.cardsForDefer = [] // карты для защиты
     // this.issuedCards = [] // выданные карты
+
+    this.$playerHand = document.querySelector('.playerHand')
+    this.$pcHand = document.querySelector('.pcHand')
   }
 
   generate() {
@@ -36,18 +39,26 @@ export default class Deck extends Card {
     }
   }
 
-  dealCards(player, count) {
-    // if (player === player[0]) {
-    //   super.addListenerToCard(playerHandCards[i], trumpCard.suit)
-    // }
+  dealCards(player, trumpOfGame) {
+    // выдаем карты пока не будет 6 на руках
+    while (player.playerCards.length < 6) {
+      player.playerCards.push(...this.deckCards.splice(0, 1))
+    }
+    // выдаем карты в количестве - count
+    // player.playerCards.push(...this.deckCards.splice(0, count))
 
-    player.playerCards.push(...this.deckCards.splice(0, count))
-
-    // удаляем 12 выданных карт из колоды и помещаем их в массив выданных карт
-    // this.issuedCards.push(...this.deckCards.splice(0, 12))
+    // рендерим карты игроков
+    player.playerCards.forEach(c => {
+      if (player.playerName === 'Player') {
+        this.$playerHand.appendChild(super.renderCard(c, trumpOfGame))
+      } else {
+        this.$pcHand.appendChild(super.renderCard(c))
+      }
+    })
   }
 
-  renderDeck(deck) { // отрисовываем колоду
+  renderDeck(deck) {
+    // отрисовываем колоду
     const $cardsDeck = document.querySelector('.deck')
     let indent = 0
 
@@ -64,21 +75,26 @@ export default class Deck extends Card {
 
       $cardsDeck.appendChild(card)
     })
+
+    // const $deck = $cardsDeck.childNodes
+    // for (let i = 0; i < $deck.length; i++) {
+    //   super.addListenerToCard($deck[i], trumpCard.suit)
+    // }
   }
 
   dealFirstCards(players) {
-    // выдаем по 6 карт каждому игроку из deckCards
-    const [playerOne, playerTwo] = players
-    this.dealCards(playerOne, 6)
-    this.dealCards(playerTwo, 6)
-
-    // рендерим колоду
-    this.renderDeck(this.deckCards) // массив карт-объектов
-
     // определяем козырь по первой (13й) карте после всех выданных
     const trumpCard = this.deckCards[0]
     const $trumpOfGame = document.querySelector('.trumpOfGame')
     $trumpOfGame.classList.add(`${trumpCard.suit}`)
+
+    // рендерим колоду
+    this.renderDeck(this.deckCards, trumpCard) // массив карт-объектов
+
+    // выдаем карты каждому игроку из deckCards и рендерим их
+    const [playerOne, playerTwo] = players
+    this.dealCards(playerOne, trumpCard)
+    this.dealCards(playerTwo)
 
     // определяем кто ходит первым
     const firstTurn = this.firstTurnDefine({
@@ -86,8 +102,8 @@ export default class Deck extends Card {
       trumpOfGame: trumpCard.suit
     })
 
-    // ставим обработчик на карты игрока
-    super.addPlayerCardsListener(trumpCard)
+    // ставим обработчик на все карты
+    // super.addCardsListener(trumpCard)
 
     return {firstTurn: firstTurn, trumpSuit: trumpCard}
   }
@@ -100,15 +116,9 @@ export default class Deck extends Card {
     const minVal2 = []
 
     playerOneCards.forEach(c => {
-      document.querySelector('.playerHand')
-        .appendChild(this.renderCard(c))
-
       c.suit === trumpOfGame ? minVal1.push(c.value) : null
     })
     playerTwoCards.forEach(c => {
-      document.querySelector('.pcHand')
-        .appendChild(this.renderCard(c))
-
       c.suit === trumpOfGame ? minVal2.push(c.value) : null
     })
 

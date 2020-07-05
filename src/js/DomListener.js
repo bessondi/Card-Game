@@ -1,41 +1,50 @@
-import Board from '@/js/Board'
+// import Board from '@/js/Board'
 
 export default class DomListener {
   constructor() {
   }
 
-  addListenerToCard(card, trump) {
-    // const check = Table.checker(card)
-    // if (!check) {
-    // const ctx = this
+  addListenerToCard($clickedCard, deckTrumpCard) {
+    $clickedCard.addEventListener('click', addCardToTable)
 
-    card.addEventListener('click', addCardToField)
 
-    function addCardToField() {
-
-      const cardsForDefer =
-        Board.cardChecker(card, 'player', trump)
-      console.log(cardsForDefer)
+    function addCardToTable() {
+      // const cardsForDefer = Board.cardsForDeferChecker($clickedCard, deckTrumpCard.suit) // arr {}
+      // const $table = document.querySelector('.table')
+      // const $actionBtn = document.querySelector('.actionBtn')
+      //
+      // // console.log($card)
+      // console.log($clickedCard, deckTrumpCard)
 
       // for (let c = 0; c < cardsForDefer.length; c++) {
-      //
-      //   if (cardsForDefer[c].suit === card.dataset.suit && cardsForDefer[c].rank === card.dataset.rank) {
-      //     console.log('sdgshdjfkgjhgfdeswq')
-      //
-      //     const table = document.querySelector('.table')
-      //     table.appendChild(card)
-      //     document.querySelector('.actionBtn').classList.remove('playerAttack')
-      //     // DomListener.getPlayerCard(card)
-      //     card.removeEventListener('click', addCardToField)
-      //   }
-      //   }
+        // console.log(cardsForDefer[c].suit === $card.dataset.suit)
+        // console.log(cardsForDefer[c].rank === $card.dataset.rank)
 
+        // $table.appendChild($card)
+        // $actionBtn.classList.remove('playerAttack')
+        // $card.removeEventListener('click', addCardToTable)
 
-      // Board.cardChecker(card, 'player', trump)
+        // if (
+        //   cardsForDefer[c].suit === $card.dataset.suit
+        //   && cardsForDefer[c].rank === $card.dataset.rank
+        // ) {
+        //   console.log('возможные карты')
+        //
+        //   $table.appendChild($card)
+        //   $actionBtn.classList.remove('playerAttack')
+        //   $card.removeEventListener('click', addCardToTable)
+
+        // }
+        // else {
+        //   console.log('любая карта')
+        //
+        //   $table.appendChild($card)
+        //   $actionBtn.classList.remove('playerAttack')
+        //   $card.removeEventListener('click', addCardToTable)
+        // }
+
+      // }
     }
-
-      // ctx.receive(card, 'player', 'pc')
-    // }
   }
 
   // addListenerToTable(table) {
@@ -57,8 +66,6 @@ export default class DomListener {
   // collector(card) {
   //   return card
   // }
-
-
   // receive(card, from, to) {
   //   // console.log(card.dataset.value)
   //   // console.log(card.dataset.suit)
