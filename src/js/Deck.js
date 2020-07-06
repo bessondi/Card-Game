@@ -6,7 +6,8 @@ export default class Deck extends Card {
     super()
     this.deckCards = [] // карты в колоде
     this.cardsForDefer = [] // карты для защиты
-    this.deckDiscard = [] // бито
+    this.trumpOfGame = undefined
+    this.discard = [] // бито
     this.$discard = document.querySelector('.discard')
     this.$playerHand = document.querySelector('.playerHand')
     this.$pcHand = document.querySelector('.pcHand')
@@ -84,28 +85,24 @@ export default class Deck extends Card {
 
   dealFirstCards(players) {
     // определяем козырь по первой (13й) карте после всех выданных
-    const trumpCard = this.deckCards[0]
+    this.trumpOfGame = this.deckCards[0]
+
     const $trumpOfGame = document.querySelector('.trumpOfGame')
-    $trumpOfGame.classList.add(`${trumpCard.suit}`)
+    $trumpOfGame.classList.add(`${this.trumpOfGame.suit}`)
 
     // рендерим колоду
-    this.renderDeck(this.deckCards, trumpCard) // массив карт-объектов
+    this.renderDeck(this.deckCards, this.trumpOfGame) // массив карт-объектов
 
     // выдаем карты каждому игроку из deckCards и рендерим их
     const [playerOne, playerTwo] = players
-    this.dealCards(playerOne, trumpCard)
+    this.dealCards(playerOne, this.trumpOfGame)
     this.dealCards(playerTwo)
 
     // определяем кто ходит первым
-    const firstTurn = this.firstTurnDefine({
+    return this.firstTurnDefine({
       hands: [playerOne.playerCards, playerTwo.playerCards],
-      trumpOfGame: trumpCard.suit
+      trumpOfGame: this.trumpOfGame.suit
     })
-
-    // ставим обработчик на все карты
-    // super.addCardsListener(trumpCard)
-
-    return {firstTurn: firstTurn, trumpSuit: trumpCard}
   }
 
   firstTurnDefine(options) {

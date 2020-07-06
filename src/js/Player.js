@@ -25,24 +25,6 @@ export default class Player {
       default: $actionBtn.innerHTML = 'ВАШ ХОД!'
         break
     }
-
-    // if (turn === 'waiting') {
-    //   $actionBtn.innerHTML = 'ВАШ ХОД!'
-    //   $actionBtn.classList.toggle('active')
-    // }
-    //
-    // if (turn === 'pc') {
-    //   setTimeout(() => {
-    //     $table.appendChild($card)
-    //     $actionBtn.innerHTML = 'ВЗЯТЬ'
-    //   }, 200)
-    // }
-    //
-    // if (turn === 'player') {
-    //   $table.appendChild($card)
-    //   $actionBtn.innerHTML = 'БИТО!'
-    //   $actionBtn.classList.toggle('active')
-    // }
   }
 
 }
