@@ -1,17 +1,20 @@
 import Card from '@/js/Card'
+import Board from '@/js/Board'
 
 
 export default class Deck extends Card {
   constructor() {
     super()
     this.deckCards = [] // карты в колоде
+    this.discard = [] // бито
     this.cardsForDefer = [] // карты для защиты
     this.trumpOfGame = undefined
-    this.discard = [] // бито
-    this.$discard = document.querySelector('.discard')
-    this.$playerHand = document.querySelector('.playerHand')
+
+    this.$deck = document.querySelector('.deck')
     this.$pcHand = document.querySelector('.pcHand')
+    this.$playerHand = document.querySelector('.playerHand')
   }
+
 
   generate() {
     const suits = ['clubs', 'diamonds', 'spades', 'hearts'],
@@ -24,6 +27,7 @@ export default class Deck extends Card {
       }
     }
   }
+
 
   shuffle() {
     let currentIndex = this.deckCards.length,
@@ -40,33 +44,16 @@ export default class Deck extends Card {
     }
   }
 
-  dealCards(player, trumpOfGame) {
-    // выдаем карты пока не будет 6 на руках
-    while (player.playerCards.length < 6) {
-      player.playerCards.push(...this.deckCards.splice(0, 1))
-    }
-    // выдаем карты в количестве - count
-    // player.playerCards.push(...this.deckCards.splice(0, count))
 
-    // рендерим карты игроков
-    player.playerCards.forEach(c => {
-      if (player.playerName === 'Player') {
-        this.$playerHand.appendChild(super.renderCard(c, trumpOfGame))
-      } else {
-        this.$pcHand.appendChild(super.renderCard(c))
-      }
-    })
-  }
-
-  renderDeck(deck) {
-    // отрисовываем колоду
-    const $cardsDeck = document.querySelector('.deck')
+  renderDeck() {
+    // отрисовываем колоду с отступом между картами
     let indent = 0
 
-    deck.forEach((c, i, d) => {
+    this.deckCards.forEach((c, i, d) => {
+      // отрисовываем карты которые не выдали игрокам
       const card = super.renderCard(c)
 
-      if (c === d[0]) { // первая карта в массиве, дом-колоде (визуально последняя)
+      if (c === d[d.length - 1]) { // последняя карта в массиве и дом-колоде
         card.classList.add('card__trump')
       } else {
         card.style.right = `${indent}em` // остальная колода
@@ -74,55 +61,63 @@ export default class Deck extends Card {
         indent += 0.02
       }
 
-      $cardsDeck.appendChild(card)
+      this.$deck.appendChild(card)
     })
-
-    // const $deck = $cardsDeck.childNodes
-    // for (let i = 0; i < $deck.length; i++) {
-    //   super.addListenerToCard($deck[i], trumpCard.suit)
-    // }
   }
 
-  dealFirstCards(players) {
-    // определяем козырь по первой (13й) карте после всех выданных
-    this.trumpOfGame = this.deckCards[0]
+
+  dealNewCards(players) {
+    // выдаем карты каждому игроку из deckCards и рендерим их
+    this.dealCard(players[0])
+    this.dealCard(players[1])
+  }
+
+
+  dealCard(player) {
+    if (this.$deck.childNodes.length !== 0) {
+      // выдаем новые карты пока не будет 6 карт на руках и рендерим их
+      for (let i = player.playerCards.length; i < 6; i++) {
+
+        player.playerCards.push(...this.deckCards.splice(0, 1))
+
+        if (player.playerName === 'Player') {
+          Board.addListener(this.$deck.childNodes[0])
+          this.$playerHand.appendChild(this.$deck.childNodes[0])
+        } else {
+          this.$pcHand.appendChild(this.$deck.childNodes[0])
+        }
+      }
+    }
+  }
+
+
+  trumpDefine() {
+    // определяем козырь по последней карте в колоде
+    this.trumpOfGame = this.deckCards[this.deckCards.length-1]
 
     const $trumpOfGame = document.querySelector('.trumpOfGame')
     $trumpOfGame.classList.add(`${this.trumpOfGame.suit}`)
-
-    // рендерим колоду
-    this.renderDeck(this.deckCards, this.trumpOfGame) // массив карт-объектов
-
-    // выдаем карты каждому игроку из deckCards и рендерим их
-    const [playerOne, playerTwo] = players
-    this.dealCards(playerOne, this.trumpOfGame)
-    this.dealCards(playerTwo)
-
-    // определяем кто ходит первым
-    return this.firstTurnDefine({
-      hands: [playerOne.playerCards, playerTwo.playerCards],
-      trumpOfGame: this.trumpOfGame.suit
-    })
   }
+
 
   firstTurnDefine(options) {
     const {hands, trumpOfGame} = options
-    const [playerOneCards, playerTwoCards] = hands
+    const [player, pc] = hands
 
     const minVal1 = []
     const minVal2 = []
 
-    playerOneCards.forEach(c => {
+    player.forEach(c => {
       c.suit === trumpOfGame ? minVal1.push(c.value) : null
     })
-    playerTwoCards.forEach(c => {
+    pc.forEach(c => {
       c.suit === trumpOfGame ? minVal2.push(c.value) : null
     })
 
     const playerMinValueCard = Math.min(...minVal1)
     const pcMinValueCard = Math.min(...minVal2)
 
-    // console.log(`Di - ${playerMinValueCard} // Pc - ${pcMinValueCard}`)
+    // console.log(`player - ${playerMinValueCard} // pc - ${pcMinValueCard}`)
 
     if (playerMinValueCard === Infinity && pcMinValueCard === Infinity) {
       return 'player'
@@ -135,9 +130,57 @@ export default class Deck extends Card {
     }
   }
 
+
   findMinValCard(cards, trump) {
     return cards.filter(c => c.suit !== trump.suit)
       .reduce((prev, curr) => prev.value < curr.value ? prev : curr)
+  }
+
+
+  addCardsToDiscard(playersHandCards){
+    // добавляем слушатель на экшн-кнопку для отправки карт в бито по нажатию
+    const $actionBtn = document.querySelector('.actionBtn')
+    $actionBtn.addEventListener('click', addCardsToDiscard)
+
+    const that = this
+
+    function addCardsToDiscard(){
+      const $cardsInGame = document.querySelector('.table')
+      const $discard = document.querySelector('.discard')
+
+      // переносим карты-объекты из рук в массив бито
+      const [player, pc] = playersHandCards
+      const cards = Array.prototype.slice.call($cardsInGame.children)
+
+      function compareCards(hand) {
+        for (let i = cards.length-1; i >= 0; i--) {
+          hand.playerCards.forEach( (c, n) => {
+            if (
+              c.suit === cards[i].dataset.suit
+              && c.rank === cards[i].dataset.rank
+            ) {
+              that.discard.push(...hand.playerCards.splice(n, 1))
+              // console.log('карты игрока ', hand.playerCards)
+              // console.log('бито ', that.discard)
+            }
+          })
+        }
+      }
+      compareCards(player)
+      compareCards(pc)
+
+      // отправляем $карты в $бито по нажатию кнопки
+      while ($cardsInGame.childNodes.length > 0) {
+        // переносим 1ю (все) ноду карт в div.discard
+        $discard.appendChild($cardsInGame.childNodes[0])
+      }
+
+      // удаляем слушатель с кнопки
+      $actionBtn.removeEventListener('click', addCardsToDiscard)
+
+      // начинаем новый уровень
+      Board.newRound()
+    }
   }
 
 

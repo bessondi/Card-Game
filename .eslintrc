@@ -18,7 +18,8 @@
     "one-var": "off",
     "no-unused-vars": "warn",
     "max-len": "off",
-    "space-before-blocks": "off"
+    "space-before-blocks": "off",
+    "no-invalid-this": "warn"
   },
   "extends": ["eslint:recommended", "google"]
 }

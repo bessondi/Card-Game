@@ -72,11 +72,17 @@ $cardColor: #b7b7b7; // fff;
       background: $cardColor;
       border: 2px solid black;
       border-radius: 10px;
+      z-index: 2;
+
+      &__trump:not(.deck .card__trump) {
+        transform: rotate(0deg);
+      }
 
       &__trump {
         transform: rotate(90deg);
         top: 10px;
         right: -20px;
+        z-index: 1;
       }
 
       // рубашки карт
@@ -164,6 +170,10 @@ $cardColor: #b7b7b7; // fff;
       left: 20px;
       width: 150px;
       height: 150px;
+
+      .card:nth-child(even){
+        transform: rotate(random(30) + deg);
+      }
     }
 
     .hands {

@@ -12,21 +12,33 @@ class Board extends DomListener {
     this.turn = ''
   }
 
+
   create(playerName, pcName) {
     this.players.push(new Player(playerName), new Player(pcName))
     this.deck.generate()
     this.deck.shuffle()
-    this.turn = this.deck.dealFirstCards(this.players)
 
-    if (this.turn === 'pc') {
-      this.pcTurn('firstRound')
-    } else if (this.turn === 'player') {
-      Player.attack()
-    }
+    // определяем козыри
+    this.deck.trumpDefine()
+
+    // рендерим колоду
+    this.deck.renderDeck() // массив карт-объектов
+
+    // выдаем игрокам карты
+    this.deck.dealNewCards(this.players)
+
+    this.turn = this.deck.firstTurnDefine({
+      hands: [this.players[0].playerCards, this.players[1].playerCards],
+      trumpOfGame: this.deck.trumpOfGame.suit
+    })
+
+    this.whoTurn()
   }
 
-  pcTurn(firstRound) {
-    if (firstRound) {
+
+  pcTurn(options) {
+    const {firstTurn, $attackCard} = options
+    if (firstTurn) {
       // младшая не козырная карта, которой можно сходить
       const minCard = this.deck.findMinValCard(this.players[1].playerCards, this.deck.trumpOfGame)
       const $firstCard = function() {
@@ -48,45 +60,40 @@ class Board extends DomListener {
 
       // меняем ход на игрока для следующего хода
       this.turn = 'player'
+      console.log('BOARD ', this.turn)
     }
 
     // TODO добавить защиту картой для pc
-    // for (let c = 0; c < this.deck.cardsForDefer.length; c++) {
-    //   if (
-    //     this.deck.cardsForDefer[c].suit === $clickedCard.dataset.suit
-    //     && this.deck.cardsForDefer[c].rank === $clickedCard.dataset.rank
-    //     && this.turn === 'player'
-    //   ) {
-    //     takeStep()
-    //   }
-    // }
+    if ($attackCard) {
+      console.log($attackCard)
+
+      // TODO делаем проверку какой картой pc может ответить на основе атакующей
+
+      // console.log(this.deck.cardsForDefer)
+      //
+      // for (let c = 0; c < this.deck.cardsForDefer.length; c++) {
+      //   console.log(this.deck.cardsForDefer[c].rank, $attackCard.dataset.rank)
+      //
+      //   if (
+      //     this.deck.cardsForDefer[c].suit === $attackCard.dataset.suit
+      //     && this.deck.cardsForDefer[c].rank === $attackCard.dataset.rank
+      //     && this.turn === 'pc'
+      //   ) {
+      //     console.log('this.deck.cardsForDefer[c]')
+      //     // Player.pcDefer(this.deck.cardsForDefer[c])
+      //     // this.turn = 'player'
+      //   }
+      // }
+    }
   }
 
-  playerTurn($clickedCard) {
+
+  addListener($clickedCard) {
+    $clickedCard.addEventListener('click', addCardToTable)
     const that = this
 
-
-    const $actionBtn = document.querySelector('.actionBtn')
-    $actionBtn.addEventListener('click', addCardsToDiscard)
-    function addCardsToDiscard(){
-
-       // TODO добавить отправку карт в бито по нажатию экшн-кнопки
-      // // отправляем карты в бито по нажатию кнопки
-      // const cardsInGame = that.players[0].playerCards.filter(c => {
-      //   // console.log(c.suit !== $clickedCard.dataset.suit)
-      //
-      //   return c.suit !== $clickedCard.dataset.suit
-      //   && c.rank !== $clickedCard.dataset.rank
-      // })
-      // that.deck.discard.push(cardsInGame)
-      // console.log(that.deck.discard)
-      //
-      // $actionBtn.removeEventListener('click', addCardsToDiscard)
-    }
-
-
-    $clickedCard.addEventListener('click', addCardToTable)
     function addCardToTable() {
+
       function takeStep() {
         // сходить одной картой
         Player.attack('player', $clickedCard)
@@ -95,11 +102,8 @@ class Board extends DomListener {
         // делаем проверку возможных карт защиты для pc
         that.cardsForDeferChecker($clickedCard)
 
-        // меняем ход на pc для следующего хода
-        that.turn = 'pc'
-
-        // кроем карту игрока картой pc
-        that.pcTurn()
+        // устанавливаем слушатель на кнопку для отправки карт в бито
+        that.deck.addCardsToDiscard(that.players)
       }
 
       // определяем возможные карты для защиты которыми можно ответить
@@ -113,12 +117,25 @@ class Board extends DomListener {
         }
       }
 
+      // TODO проверить смену ходов
       // или ходим любой картой
-      if (that.deck.cardsForDefer.length === 0 && that.turn === 'player') {
+      if (
+        that.deck.cardsForDefer.length === 0
+        || that.deck.discard.length !== 0
+        && that.turn === 'player'
+      ) {
         takeStep()
+
+        // меняем ход на pc для следующего хода
+        that.turn = 'pc'
+        console.log('BOARD ', that.turn)
+
+        // TODO кроем карту игрока картой pc
+        that.pcTurn({$attackCard: $clickedCard})
       }
     }
   }
+
 
   cardsForDeferChecker($card) {
     this.deck.cardsForDefer = []
@@ -150,8 +167,29 @@ class Board extends DomListener {
       }
     }
 
-    console.log(...this.deck.cardsForDefer)
+    console.log('Карты, которыми можно крыть: '.toUpperCase(), ...this.deck.cardsForDefer)
     return this.deck.cardsForDefer
+  }
+
+
+  whoTurn() {
+    console.log('BOARD ', this.turn)
+    if (this.turn === 'pc') {
+      this.pcTurn({firstTurn: true})
+    } else if (this.turn === 'player') {
+      Player.attack()
+    }
+  }
+
+
+  // TODO новый раунд: проверяем чей ход, активируем кнопку
+  newRound() {
+    this.deck.dealCard(this.players[0])
+    this.deck.dealCard(this.players[1])
+
+    this.whoTurn()
+
+
   }
 
 }

@@ -27,4 +27,8 @@ export default class Player {
     }
   }
 
+  // static pcDefer($card) {
+  //   console.log($card)
+  // }
+
 }
