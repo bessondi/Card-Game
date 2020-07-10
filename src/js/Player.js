@@ -1,20 +1,21 @@
 export default class Player {
   constructor(name) {
-    this.playerName = name;
-    this.playerCards = [];
+    this.playerName = name
+    this.playerCards = []
   }
 
-  static attack(turn, $card) {
+  static attack(turn, $card, whoTurn = 'ВАШ') {
     const $table = document.querySelector('.table')
     const $actionBtn = document.querySelector('.actionBtn')
     $actionBtn.classList.add('active')
 
     switch (turn) {
       case 'pc':
+        $actionBtn.innerHTML = `ХОД \n${whoTurn}`
         setTimeout(() => {
           $table.appendChild($card)
           $actionBtn.innerHTML = 'ВЗЯТЬ'
-        }, 200)
+        }, 1000)
         break
 
       case 'player':
@@ -22,9 +23,23 @@ export default class Player {
         $actionBtn.innerHTML = 'БИТО!'
         break
 
-      default: $actionBtn.innerHTML = 'ВАШ ХОД!'
+      case 'pcDefer':
+        $actionBtn.innerHTML = `ХОД \n${whoTurn}`
+        setTimeout(() => {
+          $table.appendChild($card)
+          $actionBtn.innerHTML = 'БИТО!'
+        }, 1000)
+        break
+
+      default: $actionBtn.innerHTML = `ХОД ${whoTurn}` // 'ВАШ ХОД'
+
         break
     }
+  }
+
+  takeCard() {
+  // TODO если нет карт для защиты - берем карту экшн-кнопкой
+
   }
 
   // static pcDefer($card) {

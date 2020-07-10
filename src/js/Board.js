@@ -6,10 +6,10 @@ import DomListener from '@/js/DomListener'
 class Board extends DomListener {
   constructor() {
     super()
-    this.players = [] // игроки -> карты в []  .playerCards --- [0] - player, [1] - pc
-    this.deck = new Deck() // колода -> карты в []  .deckCards   // выданные на руки []  .issuedCards
-    // this.table = new Table() // стол
-    this.turn = ''
+    this.players = [] // игроки [0]-player, [1]-pc  -->  карты в [] - players[n].playerCards
+    this.deck = new Deck() // колода -> карты - deck.deckCards = []  /  выданные на руки - deck.issuedCards = []
+    this.turn = '' // кто ходит
+    this.turnState = '' // состояние хода: pcAttack : pcDefer -- playerAttack : playerDefer
   }
 
 
@@ -27,21 +27,37 @@ class Board extends DomListener {
     // выдаем игрокам карты
     this.deck.dealNewCards(this.players)
 
+    // определяем кто ходит первым
     this.turn = this.deck.firstTurnDefine({
       hands: [this.players[0].playerCards, this.players[1].playerCards],
       trumpOfGame: this.deck.trumpOfGame.suit
     })
+    this.turnState = `${this.turn}Attack`
 
     this.whoTurn()
+
+    document.querySelector('.game__body').addEventListener('click', () => console.log(this.turn, this.turnState))
   }
 
 
-  pcTurn(options) {
-    const {firstTurn, $attackCard} = options
-    if (firstTurn) {
+  whoTurn() {
+    if (this.turn === 'pc') {
+      this.turnState = `${this.turnState}`
+      this.pcTurn()
+    } else if (this.turn === 'player') {
+      this.turnState = `${this.turnState}`
+      Player.attack()
+    }
+  }
+
+
+  pcTurn() {
+
+    // АТАКА PC =====================
+    if (this.turn === 'pc' && this.turnState === 'pcAttack') {
       // младшая не козырная карта, которой можно сходить
       const minCard = this.deck.findMinValCard(this.players[1].playerCards, this.deck.trumpOfGame)
-      const $firstCard = function() {
+      const $firstCard = function () {
         const $pcHandCards = document.querySelector('.pcHand').children
         for (let i = 0; i < $pcHandCards.length; i++) {
           if ($pcHandCards[i].dataset.rank === minCard.rank
@@ -51,39 +67,52 @@ class Board extends DomListener {
         }
       }()
 
+      // делаем проверку возможных карт для защиты игроку
+      this.getCardsForDefer($firstCard)
+
       // pc ходит этой картой
       // this.table.update('pc', 'attack', $firstCard)
-      Player.attack('pc', $firstCard)
-
-      // делаем проверку возможных карт для защиты игроку
-      this.cardsForDeferChecker($firstCard)
+      Player.attack('pc', $firstCard, this.players[1].playerName)
 
       // меняем ход на игрока для следующего хода
       this.turn = 'player'
-      console.log('BOARD ', this.turn)
+      this.turnState = 'playerDefer'
+      // console.log('АТАКА PC')
+      // console.log('ХОДИТ ', this.turn, this.turnState)
     }
+    // }
 
-    // TODO добавить защиту картой для pc
-    if ($attackCard) {
-      console.log($attackCard)
+    // ЗАЩИТА PC ===================
+    if (this.turn === 'pc' && this.turnState === 'pcDefer') {
 
-      // TODO делаем проверку какой картой pc может ответить на основе атакующей
+      for (let c = 0; c < this.deck.cardsForDefer.length; c++) {
+        for (let $c = 0; $c < this.deck.$pcHand.children.length; $c++) {
 
-      // console.log(this.deck.cardsForDefer)
-      //
-      // for (let c = 0; c < this.deck.cardsForDefer.length; c++) {
-      //   console.log(this.deck.cardsForDefer[c].rank, $attackCard.dataset.rank)
-      //
-      //   if (
-      //     this.deck.cardsForDefer[c].suit === $attackCard.dataset.suit
-      //     && this.deck.cardsForDefer[c].rank === $attackCard.dataset.rank
-      //     && this.turn === 'pc'
-      //   ) {
-      //     console.log('this.deck.cardsForDefer[c]')
-      //     // Player.pcDefer(this.deck.cardsForDefer[c])
-      //     // this.turn = 'player'
-      //   }
-      // }
+          if (
+            this.deck.$pcHand.children[$c].dataset.suit === this.deck.cardsForDefer[c].suit
+            && this.deck.$pcHand.children[$c].dataset.rank === this.deck.cardsForDefer[c].rank
+            && this.turnState === 'pcDefer'
+          ) {
+
+            // делаем проверку возможных карт защиты для pc
+            // console.log('$DEFER CARD ', this.deck.$pcHand.children[$c].dataset.rank, this.deck.$pcHand.children[$c].dataset.suit)
+
+            // сходить одной картой
+            Player.attack('pcDefer', this.deck.$pcHand.children[$c], this.players[1].playerName)
+
+            // после защиты меняем состояние хода pc на атаку
+            this.turn = 'pc'
+            this.turnState = 'pcAttack'
+            // console.log('ЗАЩИТА PC')
+            // console.log('ХОДИТ ', this.turn, this.turnState)
+
+            // this.pcTurn({isAttack: true})
+
+            // устанавливаем слушатель на кнопку для отправки карт в бито
+            this.deck.addCardsToDiscard(this.players)
+          }
+        }
+      }
     }
   }
 
@@ -99,45 +128,73 @@ class Board extends DomListener {
         Player.attack('player', $clickedCard)
         $clickedCard.removeEventListener('click', addCardToTable)
 
-        // делаем проверку возможных карт защиты для pc
-        that.cardsForDeferChecker($clickedCard)
+        // // делаем проверку возможных карт защиты для pc
+        // that.getCardsForDefer($clickedCard)
 
-        // устанавливаем слушатель на кнопку для отправки карт в бито
-        that.deck.addCardsToDiscard(that.players)
+        // // устанавливаем слушатель на кнопку для отправки карт в бито
+        // that.deck.addCardsToDiscard(that.players)
       }
 
-      // определяем возможные карты для защиты которыми можно ответить
-      for (let c = 0; c < that.deck.cardsForDefer.length; c++) {
-        if (
-          that.deck.cardsForDefer[c].suit === $clickedCard.dataset.suit
-          && that.deck.cardsForDefer[c].rank === $clickedCard.dataset.rank
-          && that.turn === 'player'
-        ) {
-          takeStep()
-        }
-      }
-
-      // TODO проверить смену ходов
-      // или ходим любой картой
+      // АТАКА PLAYER =====================
+      // ходим любой картой
       if (
-        that.deck.cardsForDefer.length === 0
-        || that.deck.discard.length !== 0
-        && that.turn === 'player'
+        // TODO проверить смену ходов, добавить стэйт хода
+        // that.deck.cardsForDefer.length === 0
+        // || that.deck.discard.length !== 0 &&
+        that.turn === 'player'
+        && that.turnState === 'playerAttack'
       ) {
         takeStep()
 
+        // делаем проверку возможных карт защиты для pc
+        that.getCardsForDefer($clickedCard)
+
         // меняем ход на pc для следующего хода
         that.turn = 'pc'
-        console.log('BOARD ', that.turn)
+        that.turnState = 'pcDefer'
+        // console.log('АТАКА Player')
+        // console.log('ХОДИТ ', that.turn, that.turnState)
+
+        // устанавливаем слушатель на кнопку для отправки карт в бито
+        that.deck.addCardsToDiscard(that.players)
 
         // TODO кроем карту игрока картой pc
-        that.pcTurn({$attackCard: $clickedCard})
+        that.pcTurn()
       }
+
+
+      // ЗАЩИТА PLAYER ===================
+      // определяем возможные карты для защиты которыми можно ответить
+      if (
+        that.turn === 'player'
+        && that.turnState === 'playerDefer'
+      ) {
+        for (let c = 0; c < that.deck.cardsForDefer.length; c++) {
+          if (
+            that.deck.cardsForDefer[c].suit === $clickedCard.dataset.suit
+            && that.deck.cardsForDefer[c].rank === $clickedCard.dataset.rank
+          ) {
+            takeStep()
+
+            // после защиты переходим в наступление
+            that.turn = 'player'
+            that.turnState = 'playerAttack'
+            // console.log('ЗАЩИТА Player')
+            // console.log('ХОДИТ ', that.turn, that.turnState)
+
+            // устанавливаем слушатель на кнопку для отправки карт в бито
+            that.deck.addCardsToDiscard(that.players)
+
+            that.pcTurn()
+          }
+        }
+      }
+
     }
   }
 
 
-  cardsForDeferChecker($card) {
+  getCardsForDefer($card) {
     this.deck.cardsForDefer = []
     let playerCards
 
@@ -166,30 +223,42 @@ class Board extends DomListener {
         this.deck.cardsForDefer.push(playerCards[c])
       }
     }
+    // console.log('Карты, ДО: '.toUpperCase(), ...this.deck.cardsForDefer)
+
+    // сортируем карты от меньшего к большему - сперва обычные, потом козыри
+    // const sortBy = [{prop: 'value', direction: 1}, {prop: 'suit', direction: -1}]
+    // this.deck.cardsForDefer.sort(function(a, b){
+    //   let i = 0, result = 0;
+    //
+    //   while (i < sortBy.length && result === 0) {
+    //     result = sortBy[i].direction * (
+    //         a[sortBy[i].prop].toString() < b[sortBy[i].prop].toString() ? -1
+    //         : (a[sortBy[i].prop].toString() > b[sortBy[i].prop].toString() ? 1
+    //         : 0)
+    //       )
+    //     i++
+    //   }
+    //   return result
+    // })
+
+    // сортируем карты от меньшего к большему - сперва обычные, потом козыри
+    // TODO корректно отсортировать по мастям
+    this.deck.cardsForDefer.sort((a, b) => {
+      return a.value - b.value
+    })
+    this.deck.cardsForDefer.sort((a, b) => {
+      return a.suit === this.deck.trumpOfGame.suit > b.suit !== this.deck.trumpOfGame.suit
+    })
 
     console.log('Карты, которыми можно крыть: '.toUpperCase(), ...this.deck.cardsForDefer)
-    return this.deck.cardsForDefer
   }
 
 
-  whoTurn() {
-    console.log('BOARD ', this.turn)
-    if (this.turn === 'pc') {
-      this.pcTurn({firstTurn: true})
-    } else if (this.turn === 'player') {
-      Player.attack()
-    }
-  }
-
-
-  // TODO новый раунд: проверяем чей ход, активируем кнопку
   newRound() {
     this.deck.dealCard(this.players[0])
     this.deck.dealCard(this.players[1])
 
     this.whoTurn()
-
-
   }
 
 }
