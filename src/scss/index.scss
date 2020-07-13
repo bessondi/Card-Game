@@ -4,6 +4,7 @@
 $backgroundColor: #606060; // #a1a1a1;
 $bodyColor: #949494; // #dadada;
 $cardColor: #b7b7b7; // fff;
+$cardsForDeferColor: #fff; // fff;
 
 
 %suitSize {
@@ -202,15 +203,19 @@ $cardColor: #b7b7b7; // fff;
       & > .card {
         background: $cardColor;
         cursor: pointer;
-        //transform: translateY(1px);
-        //transition: transform .3s;
+        transition: .3s;
+
+        &.cardsForDefer {
+          background: $cardsForDeferColor;
+        }
       }
 
       & > .card:hover {
         transform: translateY(-5px);
         box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
-        //transition: transform .3s;
       }
+
+
     }
 
     .actionBtn {

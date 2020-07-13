@@ -184,12 +184,11 @@ export default class Deck extends Card {
   }
 
 
-  // deal() { // выдаем 1 карту из начала колоды и помещаем ее в массив выданных карт
-  //   const issueCard = this.deckCards.shift()
-  //   this.issuedCards.push(issueCard)
-  //   return issueCard
-  // }
-  //
+  takeCards() {
+    console.log('take card')
+  }
+
+
   // clear() {
   //   this.deckCards = []
   // }

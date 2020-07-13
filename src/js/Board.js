@@ -80,7 +80,6 @@ class Board extends DomListener {
       // console.log('АТАКА PC')
       // console.log('ХОДИТ ', this.turn, this.turnState)
     }
-    // }
 
     // ЗАЩИТА PC ===================
     if (this.turn === 'pc' && this.turnState === 'pcDefer') {
@@ -105,8 +104,6 @@ class Board extends DomListener {
             this.turnState = 'pcAttack'
             // console.log('ЗАЩИТА PC')
             // console.log('ХОДИТ ', this.turn, this.turnState)
-
-            // this.pcTurn({isAttack: true})
 
             // устанавливаем слушатель на кнопку для отправки карт в бито
             this.deck.addCardsToDiscard(this.players)
@@ -158,7 +155,6 @@ class Board extends DomListener {
         // устанавливаем слушатель на кнопку для отправки карт в бито
         that.deck.addCardsToDiscard(that.players)
 
-        // TODO кроем карту игрока картой pc
         that.pcTurn()
       }
 
@@ -182,6 +178,8 @@ class Board extends DomListener {
             // console.log('ЗАЩИТА Player')
             // console.log('ХОДИТ ', that.turn, that.turnState)
 
+            that.showCardsForDefer({isShow: false})
+
             // устанавливаем слушатель на кнопку для отправки карт в бито
             that.deck.addCardsToDiscard(that.players)
 
@@ -194,7 +192,7 @@ class Board extends DomListener {
   }
 
 
-  getCardsForDefer($card) {
+  getCardsForDefer($card, options) {
     this.deck.cardsForDefer = []
     let playerCards
 
@@ -250,7 +248,30 @@ class Board extends DomListener {
       return a.suit === this.deck.trumpOfGame.suit > b.suit !== this.deck.trumpOfGame.suit
     })
 
+    this.showCardsForDefer({isShow: true})
+
     console.log('Карты, которыми можно крыть: '.toUpperCase(), ...this.deck.cardsForDefer)
+  }
+
+
+  showCardsForDefer(options) {
+    // подсвечиваем карты которыми можно крыть
+    setTimeout(() => {
+      for (let $c = 0; $c < this.deck.$playerHand.children.length; $c++) {
+        this.deck.$playerHand.children[$c].classList.remove('cardsForDefer')
+
+        if (options.isShow) {
+          for (let c = 0; c < this.deck.cardsForDefer.length; c++) {
+            if (
+              this.deck.cardsForDefer[c].suit === this.deck.$playerHand.children[$c].dataset.suit
+              && this.deck.cardsForDefer[c].rank === this.deck.$playerHand.children[$c].dataset.rank
+            ) {
+              this.deck.$playerHand.children[$c].classList.add('cardsForDefer')
+            }
+          }
+        }
+      }
+    }, 1000)
   }
 
 
