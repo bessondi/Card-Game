@@ -77,7 +77,7 @@ export default class Deck extends Card {
     if (this.$deck.childNodes.length !== 0) {
       // выдаем новые карты пока не будет 6 карт на руках и рендерим их
       for (let i = player.playerCards.length; i < 6; i++) {
-
+        // console.log('выдал карту')
         player.playerCards.push(...this.deckCards.splice(0, 1))
 
         if (player.playerName === 'Player') {
@@ -132,14 +132,20 @@ export default class Deck extends Card {
 
 
   findMinValCard(cards, trump) {
-    return cards.filter(c => c.suit !== trump.suit)
-      .reduce((prev, curr) => prev.value < curr.value ? prev : curr)
+    // TODO поправить сравнение всех козырей в руке в конце игры
+    if (cards.length > 1) {
+      return cards.filter(c => c.suit !== trump.suit)
+        .reduce((prev, curr) => prev.value < curr.value ? prev : curr)
+    } else {
+      return cards[0]
+    }
   }
 
 
   addCardsToDiscard(playersHandCards){
     // добавляем слушатель на экшн-кнопку для отправки карт в бито по нажатию
     const $actionBtn = document.querySelector('.actionBtn')
+    // $actionBtn.innerHTML = 'БИТО!'
     $actionBtn.addEventListener('click', addCardsToDiscard)
 
     const that = this
@@ -181,11 +187,84 @@ export default class Deck extends Card {
       // начинаем новый уровень
       Board.newRound()
     }
+
+    // setTimeout(() => addCardsToDiscard(), 1000)
   }
 
 
-  takeCards() {
-    console.log('take card')
+  takeCardsToHand(target, players) { // {}, [{}, {}]
+    // TODO сравнить массивы карт игроков с картами на $столе
+    // TODO если карта своя - перенести только ноду
+    // TODO если карта чужая - перенести и ноду и объект к игроку
+    console.log('НЕТ КАРТ ДЛЯ ЗАЩИТЫ')
+
+    const [player, pc] = players
+
+    // добавляем слушатель на экшн-кнопку для отправки карт игроку
+    const $actionBtn = document.querySelector('.actionBtn')
+    $actionBtn.innerHTML = `БЕРУ`
+    $actionBtn.classList.add('grabState')
+
+    // const that = this
+    function takeCards() {
+
+      // console.log('B-playerC', player.playerCards)
+      // console.log('B-pcC', pc.playerCards)
+
+      const $cardsInGame = document.querySelector('.table')
+      // const $hand = document.querySelector(`.${target.type}Hand`)
+      const $playerHand = document.querySelector(`.playerHand`)
+      const $pcHand = document.querySelector(`.pcHand`)
+
+      // перебор карт на столе
+      for (let $c = $cardsInGame.children.length-1; $c >= 0; $c--) {
+
+        // перебор карт у текущего игрока
+        target.playerCards.forEach((c, i) => {
+          // console.log(c.suit, $cardsInGame.children[$c].dataset.suit)
+          // console.log(c.rank, $cardsInGame.children[$c].dataset.rank)
+          if (
+            c.suit === $cardsInGame.children[$c].dataset.suit
+            && c.rank === $cardsInGame.children[$c].dataset.rank
+          ) {
+            target.playerName === player.playerName
+              ? pc.playerCards.push(...player.playerCards.splice(i, 1))
+              : player.playerCards.push(...pc.playerCards.splice(i, 1))
+
+            // console.log(target.playerCards.length)
+          }
+        })
+      }
+
+      // console.log('A-playerC', player.playerCards)
+      // console.log('A-pcC', pc.playerCards)
+
+      // отправляем $карты в $руку
+      while ($cardsInGame.childNodes.length > 0) {
+        const newCard = $cardsInGame.childNodes[0]
+
+        if (target.type === 'pc') {
+          Board.addListener(newCard)
+        }
+
+        // переносим 1ю (все) ноду карты
+        target.type === 'player'
+          ? $pcHand.appendChild(newCard)
+          : $playerHand.appendChild(newCard)
+      }
+
+      // удаляем слушатель с кнопки
+      $actionBtn.removeEventListener('click', takeCards)
+
+      // начинаем новый уровень
+      Board.newRound()
+    }
+
+    // if (target.playerName === 'pc') {
+      setTimeout(() => takeCards(), 3000)
+    // } else {
+    //   $actionBtn.addEventListener('click', takeCards)
+    // }
   }
 
 
@@ -206,5 +285,4 @@ export default class Deck extends Card {
   //     }
   //   }
   // }
-
 }

@@ -5,6 +5,10 @@ $backgroundColor: #606060; // #a1a1a1;
 $bodyColor: #949494; // #dadada;
 $cardColor: #b7b7b7; // fff;
 $cardsForDeferColor: #fff; // fff;
+$actionBtnDiscardColor: #2ea44f; // fff;
+$actionBtnDiscardHoverColor: #237c3b; // fff;
+$actionBtnGrabCardColor: #fd7e14; // fff;
+$actionBtnGrabHoverCardColor: #d46a11; // fff;
 
 
 %suitSize {
@@ -52,13 +56,15 @@ $cardsForDeferColor: #fff; // fff;
     background: $bodyColor;
     overflow: scroll;
     display: grid;
-    grid-template-columns: minmax(250px, auto) 1fr minmax(200px, auto);
+    grid-template-columns: minmax(250px, 1fr) 1fr minmax(250px, 1fr);
     grid-template-rows: repeat(3, auto);
     gap: 20px;
     align-items: center;
     justify-items: center;
-    grid-template-areas: "trump pc ." "deck table discard" "btn player .";
-
+    grid-template-areas:
+      "trump pc ."
+      "deck table discard"
+      "btn player .";
 
     .card {
       position: absolute;
@@ -74,9 +80,18 @@ $cardsForDeferColor: #fff; // fff;
       border: 2px solid black;
       border-radius: 10px;
       z-index: 2;
+      opacity: 1;
+      transition: .3s;
 
       &__trump:not(.deck .card__trump) {
         transform: rotate(0deg);
+        background-color: #555;
+        background-image: url("../assets/svg/suits.svg");
+        background-repeat: no-repeat;
+
+        //&__trump {
+        //  visibility: hidden;
+        //}
       }
 
       &__trump {
@@ -88,9 +103,9 @@ $cardsForDeferColor: #fff; // fff;
 
       // рубашки карт
       &__shirt:not(.card__trump) {
-        //background-color: #555;
-        //background-image: url("../assets/svg/suits.svg");
-        //background-repeat: no-repeat;
+        background-color: #555;
+        background-image: url("../assets/svg/suits.svg");
+        background-repeat: no-repeat;
       }
 
       &__top {
@@ -106,6 +121,11 @@ $cardsForDeferColor: #fff; // fff;
         align-self: flex-end;
         align-items: center;
         transform: rotate(180deg);
+      }
+
+      &.hidden {
+        opacity: 0;
+        transition: .3s;
       }
 
       &__rankSuit {
@@ -134,7 +154,7 @@ $cardsForDeferColor: #fff; // fff;
 
       // рубашки карт
       &.card__shirt:not(.card__trump) > * {
-        //visibility: hidden;
+        visibility: hidden;
       }
     }
 
@@ -147,16 +167,26 @@ $cardsForDeferColor: #fff; // fff;
     }
 
     .table {
+      position: relative;
       grid-area: table;
       display: flex;
       flex-flow: row;
-      justify-content: space-around;
+      justify-content: center;
       width: 100%;
 
       & .card {
         position: static;
         background: $cardColor;
+        opacity: 1;
+        transition: .3s;
       }
+
+      //& .card:nth-child(even) {
+      //  //right: 50px !important;
+      //  //bottom: 15px !important;
+      //  box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
+      //  background: $cardColor;
+      //}
 
       & > .card.card__shirt > * {
         visibility: visible;
@@ -168,9 +198,9 @@ $cardsForDeferColor: #fff; // fff;
       display: flex;
       flex-flow: row;
       position: relative;
-      left: 20px;
-      width: 150px;
+      left: -50px;
       height: 150px;
+      width: 150px;
 
       .card:nth-child(even){
         transform: rotate(random(30) + deg);
@@ -207,6 +237,7 @@ $cardsForDeferColor: #fff; // fff;
 
         &.cardsForDefer {
           background: $cardsForDeferColor;
+          border-color: $actionBtnDiscardColor;
         }
       }
 
@@ -214,8 +245,6 @@ $cardsForDeferColor: #fff; // fff;
         transform: translateY(-5px);
         box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
       }
-
-
     }
 
     .actionBtn {
@@ -232,37 +261,36 @@ $cardsForDeferColor: #fff; // fff;
       font-weight: bold;
       outline: none;
       border: none;
-
-      &:hover {
-        background: gray;
-      }
+      transition: .3s;
 
       &.active {
         visibility: visible;
         cursor: pointer;
-        &:active {
-          background: darkgray;
+        transition: .3s;
+      }
+
+      &.grabState {
+        background: $actionBtnGrabCardColor;
+        &:hover {
+          background: $actionBtnGrabHoverCardColor;
         }
       }
-      &.playerAttack {
-        visibility: visible;
-        background: none;
-        color: #000;
+
+      &.discardState {
+        background: $actionBtnDiscardColor;
+        &:hover {
+          background: $actionBtnDiscardHoverColor;
+        }
       }
     }
 
     .trumpOfGame {
       grid-area: trump;
-      position: relative;
-      //top: 10px;
-      right: 5px;
+      //position: relative;
+      //right: 5px;
       display: flex;
-      //align-items: center;
-      //justify-content: center;
-      width: 50px;
-      height: 50px;
-      //border: 1px solid #000;
-      //border-radius: 50%;
+      width: 100px;
+      height: 100px;
 
 
       &.clubs {

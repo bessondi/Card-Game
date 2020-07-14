@@ -1,7 +1,8 @@
 export default class Player {
-  constructor(name) {
+  constructor(name, type) {
     this.playerName = name
     this.playerCards = []
+    this.type = type
   }
 
   static attack(turn, $card, whoTurn = 'ВАШ') {
@@ -9,41 +10,44 @@ export default class Player {
     const $actionBtn = document.querySelector('.actionBtn')
     $actionBtn.classList.add('active')
 
-    switch (turn) {
-      case 'pc':
-        $actionBtn.innerHTML = `ХОД \n${whoTurn}`
-        setTimeout(() => {
-          $table.appendChild($card)
-          $actionBtn.innerHTML = 'ВЗЯТЬ'
-        }, 1000)
-        break
+    const throwCard = ($c) => $table.appendChild($c)
 
-      case 'player':
-        $table.appendChild($card)
-        $actionBtn.innerHTML = 'БИТО!'
+
+    switch (turn) {
+      case 'pcAttack':
+        $actionBtn.innerHTML = `ХОДИТ ${whoTurn}`
+        setTimeout(() => {
+          throwCard($card)
+          $actionBtn.innerHTML = `ВАШ ХОД`
+        }, 1000)
         break
 
       case 'pcDefer':
-        $actionBtn.innerHTML = `ХОД \n${whoTurn}`
+        $actionBtn.innerHTML = `ХОДИТ ${whoTurn}`
         setTimeout(() => {
-          $table.appendChild($card)
+          throwCard($card)
           $actionBtn.innerHTML = 'БИТО!'
+          $actionBtn.classList.toggle('discardState')
         }, 1000)
         break
 
-      default: $actionBtn.innerHTML = `ХОД ${whoTurn}` // 'ВАШ ХОД'
-
+      case 'playerAttack':
+        throwCard($card)
+        $actionBtn.innerHTML = 'ХОД!'
+        // $actionBtn.classList.toggle('grabState')
         break
+
+      case 'playerDefer':
+        throwCard($card)
+        $actionBtn.innerHTML = 'БИТО!'
+        $actionBtn.classList.toggle('discardState')
+        break
+
+      default:
+        $actionBtn.innerHTML = `${whoTurn} ХОД`
+        $actionBtn.classList.remove('discardState', 'grabState')
+        // $actionBtn.classList.toggle('grabState')
     }
   }
-
-  takeCard() {
-  // TODO если нет карт для защиты - берем карту экшн-кнопкой
-
-  }
-
-  // static pcDefer($card) {
-  //   console.log($card)
-  // }
 
 }
