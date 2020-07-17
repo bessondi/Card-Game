@@ -20,7 +20,8 @@
     "space-before-blocks": "off",
     "space-before-function-paren": "off",
     "no-unused-vars": "warn",
-    "no-invalid-this": "warn"
+    "no-invalid-this": "warn",
+    "linebreak-style": "off"
   },
   "extends": ["eslint:recommended", "google"]
 }
