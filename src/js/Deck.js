@@ -131,9 +131,11 @@ export default class Deck extends Card {
   }
 
 
-  findMinValCard(cards, trump) {
+   findMinValCard(cards, trump) {
     // TODO поправить сравнение всех козырей в руке в конце игры
-    if (cards.length > 1) {
+     console.log('length: ', cards.length)
+
+     if (cards.length > 1) {
       return cards.filter(c => c.suit !== trump.suit)
         .reduce((prev, curr) => prev.value < curr.value ? prev : curr)
     } else {
@@ -192,10 +194,7 @@ export default class Deck extends Card {
   }
 
 
-  takeCardsToHand(target, players) { // {}, [{}, {}]
-    // TODO сравнить массивы карт игроков с картами на $столе
-    // TODO если карта своя - перенести только ноду
-    // TODO если карта чужая - перенести и ноду и объект к игроку
+  takeCardsToHand(target, players) {
     console.log('НЕТ КАРТ ДЛЯ ЗАЩИТЫ')
 
     const [player, pc] = players
@@ -261,28 +260,9 @@ export default class Deck extends Card {
     }
 
     // if (target.playerName === 'pc') {
-      setTimeout(() => takeCards(), 3000)
+      setTimeout(() => takeCards(), 2500)
     // } else {
     //   $actionBtn.addEventListener('click', takeCards)
     // }
   }
-
-
-  // clear() {
-  //   this.deckCards = []
-  // }
-  //
-  // replace() { // добавляем в начало колоды первую карту из выданных
-  //   console.log(this.deckCards.unshift(this.issuedCards.shift()))
-  // }
-  //
-  // print() {
-  //   if (!this.deckCards.length) {
-  //     console.log('Колода не сформирована')
-  //   } else {
-  //     for (let c = 0; c < this.deckCards.length; c++) {
-  //       console.log(this.deckCards[c])
-  //     }
-  //   }
-  // }
 }
