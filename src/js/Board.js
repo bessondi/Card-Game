@@ -323,12 +323,18 @@ class Board extends DomListener {
       this.whoTurn()
 
     } else {
-      this.players[0].playerCards.length > 0 // у игрока остались карты?
-      ? console.log(`КОНЕЦ ИГРЫ! \n ВЫЙГРАЛ ${this.players[1].playerName}!`)
-      : console.log('КОНЕЦ ИГРЫ! \n ВЫ ВЫЙГРАЛИ!')
+      document.querySelector('.game__body').style.display = 'none'
+      document.querySelector('.winPage').style.display = 'flex'
+      const winPageTitle = document.querySelector('.winPage__title')
+
+      // у игрока остались карты?
+      this.players[0].playerCards.length > 0
+      ? winPageTitle.innerHTML = `GAME OVER! <br/> THE ${this.players[1].playerName} WIN!`
+      : winPageTitle.innerHTML = `GAME OVER! <br/> YOU WIN!`
     }
   }
 
 }
+
 
 export default new Board()

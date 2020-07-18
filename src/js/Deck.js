@@ -131,13 +131,13 @@ export default class Deck extends Card {
   }
 
 
-   findMinValCard(cards, trump) {
+  findMinValCard(cards, trump) {
     // TODO поправить сравнение всех козырей в руке в конце игры
      console.log('length: ', cards.length)
 
      if (cards.length > 1) {
       return cards.filter(c => c.suit !== trump.suit)
-        .reduce((prev, curr) => prev.value < curr.value ? prev : curr)
+        .reduce((prev, curr) => prev.value < curr.value ? prev : curr, 0)
     } else {
       return cards[0]
     }
@@ -146,9 +146,8 @@ export default class Deck extends Card {
 
   addCardsToDiscard(playersHandCards){
     // добавляем слушатель на экшн-кнопку для отправки карт в бито по нажатию
-    const $actionBtn = document.querySelector('.actionBtn')
-    // $actionBtn.innerHTML = 'БИТО!'
-    $actionBtn.addEventListener('click', addCardsToDiscard)
+    // const $actionBtn = document.querySelector('.actionBtn')
+    // $actionBtn.addEventListener('click', addCardsToDiscard)
 
     const that = this
 
@@ -184,13 +183,13 @@ export default class Deck extends Card {
       }
 
       // удаляем слушатель с кнопки
-      $actionBtn.removeEventListener('click', addCardsToDiscard)
+      // $actionBtn.removeEventListener('click', addCardsToDiscard)
 
       // начинаем новый уровень
       Board.newRound()
     }
 
-    // setTimeout(() => addCardsToDiscard(), 1000)
+    setTimeout(() => addCardsToDiscard(), 2000)
   }
 
 
@@ -201,7 +200,7 @@ export default class Deck extends Card {
 
     // добавляем слушатель на экшн-кнопку для отправки карт игроку
     const $actionBtn = document.querySelector('.actionBtn')
-    $actionBtn.innerHTML = `БЕРУ`
+    $actionBtn.innerHTML = `Take a Card`
     $actionBtn.classList.add('grabState')
 
     // const that = this
