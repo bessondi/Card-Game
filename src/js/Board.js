@@ -16,6 +16,7 @@ class Board extends DomListener {
 
   create(playerName, pcName) {
     this.players.push(new Player(playerName, 'player'), new Player(pcName, 'pc'))
+    this.getNames(this.players)
     this.deck.generate()
     this.deck.shuffle()
 
@@ -309,6 +310,21 @@ class Board extends DomListener {
         }
       }
     }, 1000)
+  }
+
+
+  getNames(players) {
+    const [player, pc] = players
+    console.log(player, pc)
+
+    document.querySelector('.playerName')
+      .insertAdjacentHTML('afterbegin', `
+          <span>${player.playerName}</span>
+      `)
+    document.querySelector('.pcName')
+      .insertAdjacentHTML('afterbegin', `
+          <span>${pc.playerName}</span>
+      `)
   }
 
 

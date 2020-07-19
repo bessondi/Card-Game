@@ -1,20 +1,20 @@
 &__body {
   display: none;
   //display: grid;
-  width: 90%;
-  height: 90%;
+  width: 97%;
+  height: 95%;
   border-radius: 50px;
   background: $bodyColor;
   //overflow: scroll;
-  grid-template-columns: minmax(250px, 1fr) 1fr minmax(250px, 1fr);
+  grid-template-columns: minmax(200px, 1fr) 650px minmax(200px, 1fr);
   grid-template-rows: repeat(3, auto);
   gap: 20px;
   align-items: center;
   justify-items: center;
   grid-template-areas:
-      "trump pc ."
+      "trump pc pcName"
       "deck table discard"
-      "btn player .";
+      "btn player playerName";
 
   .card {
     position: absolute;
@@ -27,11 +27,12 @@
     padding: 5px;
     margin: 5px;
     background: $cardColor;
-    border: 2px solid black;
+    border: 2px solid $cardBorder;
     border-radius: 10px;
     z-index: 2;
     opacity: 1;
     transition: .3s;
+    font-family: 'Cards Caracter', sans-serif;
 
     &__top {
       display: flex;
@@ -89,7 +90,7 @@
       visibility: hidden;
     }
 
-    &.card__shirt:not(.deck) > * {
+    &__shirt:not(.deck) > * {
       visibility: hidden;
     }
   }
@@ -97,7 +98,7 @@
   .deck {
     grid-area: deck;
     position: relative;
-    right: 20px;
+    right: 25px;
     width: 150px;
     height: 150px;
 
@@ -146,7 +147,7 @@
     display: flex;
     flex-flow: row;
     position: relative;
-    left: -50px;
+    left: -25px;
     height: 150px;
     width: 150px;
 
@@ -198,6 +199,7 @@
       &.cardsForDefer {
         background: $cardsForDeferColor;
         border-color: $actionBtnDiscardColor;
+        transform: translateY(-10px);
       }
     }
 
@@ -229,8 +231,8 @@
     }
 
     &.discardState {
-      background: $actionBtnDiscardHoverColor;
-      cursor: pointer;
+      background: $actionBtnDiscardColor;
+      //cursor: pointer;
 
       //&:hover {
       //  background: $actionBtnDiscardHoverColor;
@@ -260,5 +262,15 @@
     &.hearts {
       @extend %hearts;
     }
+  }
+
+  .pcName {
+    grid-area: pcName;
+    @extend %name;
+  }
+
+  .playerName {
+    grid-area: playerName;
+    @extend %name;
   }
 }
