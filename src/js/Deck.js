@@ -132,12 +132,15 @@ export default class Deck extends Card {
 
 
   findMinValCard(cards, trump) {
-    // TODO поправить сравнение всех козырей в руке в конце игры
      console.log('length: ', cards.length)
 
      if (cards.length > 1) {
-      return cards.filter(c => c.suit !== trump.suit)
-        .reduce((prev, curr) => prev.value < curr.value ? prev : curr, 0)
+       const cardsWithoutTrump = cards.filter(c => c.suit !== trump.suit)
+       const cardsWithTrump = cards.filter(c => c.suit === trump.suit)
+
+      return cardsWithoutTrump.length > 0
+        ? cardsWithoutTrump.reduce((prev, curr) => prev.value < curr.value ? prev : curr, 0)
+        : cardsWithTrump.reduce((prev, curr) => prev.value < curr.value ? prev : curr, 0)
     } else {
       return cards[0]
     }
