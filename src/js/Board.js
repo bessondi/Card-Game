@@ -6,13 +6,12 @@ import DomListener from '@/js/DomListener'
 class Board extends DomListener {
   constructor() {
     super()
-    this.players = [] // игроки [0]-player, [1]-pc  -->  карты в [] - players[n].playerCards
-    this.deck = new Deck() // колода -> карты - deck.deckCards = []  /  выданные на руки - deck.issuedCards = []
-    this.turn = '' // кто ходит
-    this.turnState = '' // состояние хода: pcAttack : pcDefer -- playerAttack : playerDefer
+    this.players = []
+    this.deck = new Deck()
+    this.turn = ''
+    this.turnState = '' // pcAttack : pcDefer -- playerAttack : playerDefer
     this.isDiscard = false
   }
-
 
   create(playerName, pcName) {
     this.players.push(new Player(playerName, 'player'), new Player(pcName, 'pc'))
@@ -24,7 +23,7 @@ class Board extends DomListener {
     this.deck.trumpDefine()
 
     // рендерим колоду
-    this.deck.renderDeck() // массив карт-объектов
+    this.deck.renderDeck()
 
     // выдаем игрокам карты
     this.deck.dealNewCards(this.players)
@@ -41,7 +40,6 @@ class Board extends DomListener {
     document.querySelector('.game__body').addEventListener('click', () => console.log(this.turn, this.turnState))
   }
 
-
   whoTurn() {
     if (this.turn === 'pc') {
       this.turnState = `${this.turnState}`
@@ -51,7 +49,6 @@ class Board extends DomListener {
       Player.attack()
     }
   }
-
 
   pcTurn() {
     // TODO АТАКА PC ====================
@@ -141,7 +138,6 @@ class Board extends DomListener {
     }
   }
 
-
   addListener($clickedCard) {
     const that = this
     $clickedCard.addEventListener('click', addCardToTable)
@@ -229,7 +225,6 @@ class Board extends DomListener {
     }
   }
 
-
   getCardsForDefer($card) {
     this.deck.cardsForDefer = []
     let playerCards
@@ -291,7 +286,6 @@ class Board extends DomListener {
     console.log('Карты, которыми можно крыть: ', ...this.deck.cardsForDefer)
   }
 
-
   showCardsForDefer(options) {
     // подсвечиваем карты которыми можно крыть
     setTimeout(() => {
@@ -312,7 +306,6 @@ class Board extends DomListener {
     }, 1000)
   }
 
-
   getNames(players) {
     const [player, pc] = players
     console.log(player, pc)
@@ -326,7 +319,6 @@ class Board extends DomListener {
           <span>${pc.playerName}</span>
       `)
   }
-
 
   newRound() {
     if (
@@ -345,11 +337,10 @@ class Board extends DomListener {
 
       // у игрока остались карты?
       this.players[0].playerCards.length > 0
-      ? winPageTitle.innerHTML = `GAME OVER! <br/> THE ${this.players[1].playerName} WIN!`
-      : winPageTitle.innerHTML = `GAME OVER! <br/> YOU WIN!`
+      ? winPageTitle.innerHTML = `GAME OVER! <br/><br/> THE ${this.players[1].playerName.toUpperCase()} WIN!`
+      : winPageTitle.innerHTML = `GAME OVER! <br/><br/> YOU WIN!`
     }
   }
-
 }
 
 
