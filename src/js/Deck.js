@@ -132,10 +132,15 @@ export default class Deck extends Card {
 
 
   findMinValCard(cards, trump) {
-    // TODO поправить сравнение всех козырей в руке в конце игры
-    if (cards.length > 1) {
-      return cards.filter(c => c.suit !== trump.suit)
-        .reduce((prev, curr) => prev.value < curr.value ? prev : curr)
+     console.log('length: ', cards.length)
+
+     if (cards.length > 1) {
+       const cardsWithoutTrump = cards.filter(c => c.suit !== trump.suit)
+       const cardsWithTrump = cards.filter(c => c.suit === trump.suit)
+
+      return cardsWithoutTrump.length > 0
+        ? cardsWithoutTrump.reduce((prev, curr) => prev.value < curr.value ? prev : curr, 0)
+        : cardsWithTrump.reduce((prev, curr) => prev.value < curr.value ? prev : curr, 0)
     } else {
       return cards[0]
     }
@@ -144,9 +149,8 @@ export default class Deck extends Card {
 
   addCardsToDiscard(playersHandCards){
     // добавляем слушатель на экшн-кнопку для отправки карт в бито по нажатию
-    const $actionBtn = document.querySelector('.actionBtn')
-    // $actionBtn.innerHTML = 'БИТО!'
-    $actionBtn.addEventListener('click', addCardsToDiscard)
+    // const $actionBtn = document.querySelector('.actionBtn')
+    // $actionBtn.addEventListener('click', addCardsToDiscard)
 
     const that = this
 
@@ -182,27 +186,24 @@ export default class Deck extends Card {
       }
 
       // удаляем слушатель с кнопки
-      $actionBtn.removeEventListener('click', addCardsToDiscard)
+      // $actionBtn.removeEventListener('click', addCardsToDiscard)
 
       // начинаем новый уровень
       Board.newRound()
     }
 
-    // setTimeout(() => addCardsToDiscard(), 1000)
+    setTimeout(() => addCardsToDiscard(), 2000)
   }
 
 
-  takeCardsToHand(target, players) { // {}, [{}, {}]
-    // TODO сравнить массивы карт игроков с картами на $столе
-    // TODO если карта своя - перенести только ноду
-    // TODO если карта чужая - перенести и ноду и объект к игроку
+  takeCardsToHand(target, players) {
     console.log('НЕТ КАРТ ДЛЯ ЗАЩИТЫ')
 
     const [player, pc] = players
 
     // добавляем слушатель на экшн-кнопку для отправки карт игроку
     const $actionBtn = document.querySelector('.actionBtn')
-    $actionBtn.innerHTML = `БЕРУ`
+    $actionBtn.innerHTML = `Take a Card`
     $actionBtn.classList.add('grabState')
 
     // const that = this
@@ -261,28 +262,9 @@ export default class Deck extends Card {
     }
 
     // if (target.playerName === 'pc') {
-      setTimeout(() => takeCards(), 3000)
+      setTimeout(() => takeCards(), 2500)
     // } else {
     //   $actionBtn.addEventListener('click', takeCards)
     // }
   }
-
-
-  // clear() {
-  //   this.deckCards = []
-  // }
-  //
-  // replace() { // добавляем в начало колоды первую карту из выданных
-  //   console.log(this.deckCards.unshift(this.issuedCards.shift()))
-  // }
-  //
-  // print() {
-  //   if (!this.deckCards.length) {
-  //     console.log('Колода не сформирована')
-  //   } else {
-  //     for (let c = 0; c < this.deckCards.length; c++) {
-  //       console.log(this.deckCards[c])
-  //     }
-  //   }
-  // }
 }

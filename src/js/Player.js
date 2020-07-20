@@ -5,7 +5,7 @@ export default class Player {
     this.type = type
   }
 
-  static attack(turn, $card, whoTurn = 'ВАШ') {
+  static attack(turn, $card, whoTurn = 'Your') {
     const $table = document.querySelector('.table')
     const $actionBtn = document.querySelector('.actionBtn')
     $actionBtn.classList.add('active')
@@ -15,36 +15,36 @@ export default class Player {
 
     switch (turn) {
       case 'pcAttack':
-        $actionBtn.innerHTML = `ХОДИТ ${whoTurn}`
+        $actionBtn.innerHTML = `${whoTurn} Turn`
         setTimeout(() => {
           throwCard($card)
-          $actionBtn.innerHTML = `ВАШ ХОД`
+          $actionBtn.innerHTML = `Your Turn`
         }, 1000)
         break
 
       case 'pcDefer':
-        $actionBtn.innerHTML = `ХОДИТ ${whoTurn}`
+        $actionBtn.innerHTML = `${whoTurn} Turn`
         setTimeout(() => {
           throwCard($card)
-          $actionBtn.innerHTML = 'БИТО!'
+          $actionBtn.innerHTML = 'Discard!'
           $actionBtn.classList.toggle('discardState')
         }, 1000)
         break
 
       case 'playerAttack':
         throwCard($card)
-        $actionBtn.innerHTML = 'ХОД!'
+        $actionBtn.innerHTML = 'Turn!'
         // $actionBtn.classList.toggle('grabState')
         break
 
       case 'playerDefer':
         throwCard($card)
-        $actionBtn.innerHTML = 'БИТО!'
+        $actionBtn.innerHTML = 'Discard!'
         $actionBtn.classList.toggle('discardState')
         break
 
       default:
-        $actionBtn.innerHTML = `${whoTurn} ХОД`
+        $actionBtn.innerHTML = `${whoTurn} Turn`
         $actionBtn.classList.remove('discardState', 'grabState')
         // $actionBtn.classList.toggle('grabState')
     }

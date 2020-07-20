@@ -1,0 +1,46 @@
+%clubs {
+  background: url("../assets/svg/clubs.svg") no-repeat;
+  filter: invert(34%) sepia(100%) saturate(1725%) hue-rotate(100deg) brightness(88%) contrast(105%);
+}
+
+%diamonds {
+  background: url("../assets/svg/diamond.svg") no-repeat;
+  filter: invert(32%) sepia(84%) saturate(5319%) hue-rotate(211deg) brightness(101%) contrast(106%);
+}
+
+%spades {
+  background: url("../assets/svg/spade.svg") no-repeat;
+}
+
+%hearts {
+  background: url("../assets/svg/heart.svg") no-repeat;
+  filter: invert(21%) sepia(90%) saturate(7396%) hue-rotate(358deg) brightness(106%) contrast(118%);
+}
+
+%suitSize {
+  width: 40px;
+  height: 40px;
+}
+
+%rankSuitSize {
+  width: 10px;
+  height: 10px;
+}
+
+%btn {
+  width: 150px;
+  height: 50px;
+  background: $actionDefaultColor;
+  color: #fff;
+  border-radius: 50px;
+  //font-size: 1.125rem;
+  font-weight: bold;
+  outline: none;
+  border: none;
+  transition: .3s;
+  cursor: pointer;
+}
+
+%name {
+  font-size: 2rem;
+}
