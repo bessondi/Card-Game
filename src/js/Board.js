@@ -16,6 +16,7 @@ class Board extends DomListener {
 
   create(playerName, pcName) {
     this.players.push(new Player(playerName, 'player'), new Player(pcName, 'pc'))
+    this.getNames(this.players)
     this.deck.generate()
     this.deck.shuffle()
 
@@ -312,6 +313,21 @@ class Board extends DomListener {
   }
 
 
+  getNames(players) {
+    const [player, pc] = players
+    console.log(player, pc)
+
+    document.querySelector('.playerName')
+      .insertAdjacentHTML('afterbegin', `
+          <span>${player.playerName}</span>
+      `)
+    document.querySelector('.pcName')
+      .insertAdjacentHTML('afterbegin', `
+          <span>${pc.playerName}</span>
+      `)
+  }
+
+
   newRound() {
     if (
       this.players[0].playerCards.length > 0
@@ -323,12 +339,18 @@ class Board extends DomListener {
       this.whoTurn()
 
     } else {
-      this.players[0].playerCards.length > 0 // у игрока остались карты?
-      ? console.log(`КОНЕЦ ИГРЫ! \n ВЫЙГРАЛ ${this.players[1].playerName}!`)
-      : console.log('КОНЕЦ ИГРЫ! \n ВЫ ВЫЙГРАЛИ!')
+      document.querySelector('.game__body').style.display = 'none'
+      document.querySelector('.winPage').style.display = 'flex'
+      const winPageTitle = document.querySelector('.winPage__title')
+
+      // у игрока остались карты?
+      this.players[0].playerCards.length > 0
+      ? winPageTitle.innerHTML = `GAME OVER! <br/> THE ${this.players[1].playerName} WIN!`
+      : winPageTitle.innerHTML = `GAME OVER! <br/> YOU WIN!`
     }
   }
 
 }
+
 
 export default new Board()

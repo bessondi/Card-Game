@@ -1,313 +1,45 @@
 @import '~normalize.css';
+@import "fonts";
+@import "colors";
+@import "templates";
 
-// colors
-$backgroundColor: #606060; // #a1a1a1;
-$bodyColor: #949494; // #dadada;
-$cardColor: #b7b7b7; // fff;
-$cardsForDeferColor: #fff; // fff;
-$actionBtnDiscardColor: #2ea44f; // fff;
-$actionBtnDiscardHoverColor: #237c3b; // fff;
-$actionBtnGrabCardColor: #fd7e14; // fff;
-$actionBtnGrabHoverCardColor: #d46a11; // fff;
+body {
+  font-family: 'Akzidenz Grotesk', sans-serif;
+  font-size: 16px;
 
-
-%suitSize {
-  width: 40px;
-  height: 40px;
-}
-
-%rankSuitSize {
-  width: 10px;
-  height: 10px;
-}
-
-%clubs {
-  background: url("../assets/svg/clubs.svg") no-repeat;
-  filter: invert(34%) sepia(100%) saturate(1725%) hue-rotate(100deg) brightness(88%) contrast(105%);
-}
-
-%diamonds {
-  background: url("../assets/svg/diamond.svg") no-repeat;
-  filter: invert(32%) sepia(84%) saturate(5319%) hue-rotate(211deg) brightness(101%) contrast(106%);
-}
-
-%spades {
-  background: url("../assets/svg/spade.svg") no-repeat;
-}
-
-%hearts {
-  background: url("../assets/svg/heart.svg") no-repeat;
-  filter: invert(21%) sepia(90%) saturate(7396%) hue-rotate(358deg) brightness(106%) contrast(118%);
-}
-
-
-.game {
-  background: $backgroundColor;
-  width: 100%;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  &__body {
-    width: 90%;
-    height: 90%;
-    border-radius: 50px;
-    background: $bodyColor;
-    overflow: scroll;
-    display: grid;
-    grid-template-columns: minmax(250px, 1fr) 1fr minmax(250px, 1fr);
-    grid-template-rows: repeat(3, auto);
-    gap: 20px;
+  .game {
+    background: $backgroundColor;
+    width: 100%;
+    height: 100vh;
+    display: flex;
     align-items: center;
-    justify-items: center;
-    grid-template-areas:
-      "trump pc ."
-      "deck table discard"
-      "btn player .";
+    justify-content: center;
 
-    .card {
-      position: absolute;
-      display: flex;
-      flex-flow: column;
-      justify-content: space-between;
-      align-items: center;
-      width: 80px;
-      height: 120px;
-      padding: 5px;
-      margin: 5px;
-      background: $cardColor;
-      border: 2px solid black;
-      border-radius: 10px;
-      z-index: 2;
-      opacity: 1;
-      transition: .3s;
+    @import "startPage";
+    @import "game";
+    @import "winPage";
+  }
 
-      &__trump:not(.deck .card__trump) {
-        transform: rotate(0deg);
-        background-color: #555;
-        background-image: url("../assets/svg/suits.svg");
-        background-repeat: no-repeat;
+  .plug {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: $whiteColor;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    z-index: 5;
 
-        //&__trump {
-        //  visibility: hidden;
-        //}
-      }
-
-      &__trump {
-        transform: rotate(90deg);
-        top: 10px;
-        right: -20px;
-        z-index: 1;
-      }
-
-      // рубашки карт
-      &__shirt:not(.card__trump) {
-        background-color: #555;
-        background-image: url("../assets/svg/suits.svg");
-        background-repeat: no-repeat;
-      }
-
-      &__top {
-        display: flex;
-        flex-flow: column;
-        align-self: flex-start;
-        align-items: center;
-      }
-
-      &__bottom {
-        display: flex;
-        flex-flow: column;
-        align-self: flex-end;
-        align-items: center;
-        transform: rotate(180deg);
-      }
-
-      &.hidden {
-        opacity: 0;
-        transition: .3s;
-      }
-
-      &__rankSuit {
-        @extend %rankSuitSize;
-      }
-
-      .spades {
-        @extend %spades;
-      }
-
-      .clubs {
-        @extend %clubs;
-      }
-
-      .diamonds {
-        @extend %diamonds;
-      }
-
-      .hearts {
-        @extend %hearts;
-      }
-
-      &__suit {
-        @extend %suitSize;
-      }
-
-      // рубашки карт
-      &.card__shirt:not(.card__trump) > * {
-        visibility: hidden;
-      }
-    }
-
-    .deck {
-      grid-area: deck;
-      position: relative;
-      right: 20px;
-      width: 150px;
-      height: 150px;
-    }
-
-    .table {
-      position: relative;
-      grid-area: table;
-      display: flex;
-      flex-flow: row;
-      justify-content: center;
-      width: 100%;
-
-      & .card {
-        position: static;
-        background: $cardColor;
-        opacity: 1;
-        transition: .3s;
-      }
-
-      //& .card:nth-child(even) {
-      //  //right: 50px !important;
-      //  //bottom: 15px !important;
-      //  box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
-      //  background: $cardColor;
-      //}
-
-      & > .card.card__shirt > * {
-        visibility: visible;
-      }
-    }
-
-    .discard {
-      grid-area: discard;
-      display: flex;
-      flex-flow: row;
-      position: relative;
-      left: -50px;
-      height: 150px;
-      width: 150px;
-
-      .card:nth-child(even){
-        transform: rotate(random(30) + deg);
-      }
-    }
-
-    .hands {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100%;
-
-      & .card {
-        position: static;
-      }
-    }
-
-    .pcHand {
-      grid-area: pc;
-    }
-
-    .playerHand {
-      grid-area: player;
-
-      & > .card.card__shirt > * {
-        visibility: visible;
-      }
-
-      & > .card {
-        background: $cardColor;
-        cursor: pointer;
-        transition: .3s;
-
-        &.cardsForDefer {
-          background: $cardsForDeferColor;
-          border-color: $actionBtnDiscardColor;
-        }
-      }
-
-      & > .card:hover {
-        transform: translateY(-5px);
-        box-shadow: 3px 3px 3px 0 rgba(0, 0, 0, 0.5);
-      }
-    }
-
-    .actionBtn {
-      grid-area: btn;
-      position: relative;
-      left: 10px;
-      visibility: hidden;
-      width: 150px;
-      height: 50px;
-      background: #000;
-      color: #fff;
-      border-radius: 50px;
-      font-size: 1.125rem;
-      font-weight: bold;
-      outline: none;
-      border: none;
-      transition: .3s;
-
-      &.active {
-        visibility: visible;
-        cursor: pointer;
-        transition: .3s;
-      }
-
-      &.grabState {
-        background: $actionBtnGrabCardColor;
-        &:hover {
-          background: $actionBtnGrabHoverCardColor;
-        }
-      }
-
-      &.discardState {
-        background: $actionBtnDiscardColor;
-        &:hover {
-          background: $actionBtnDiscardHoverColor;
-        }
-      }
-    }
-
-    .trumpOfGame {
-      grid-area: trump;
-      //position: relative;
-      //right: 5px;
-      display: flex;
-      width: 100px;
-      height: 100px;
-
-
-      &.clubs {
-        @extend %clubs;
-      }
-
-      &.diamonds {
-        @extend %diamonds;
-      }
-
-      &.spades {
-        @extend %spades;
-      }
-
-      &.hearts {
-        @extend %hearts;
-      }
+    &__title {
+      text-align: center;
     }
   }
+
+  @import "media";
 }
+
