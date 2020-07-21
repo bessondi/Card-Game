@@ -5,16 +5,15 @@ import Board from '@/js/Board'
 export default class Deck extends Card {
   constructor() {
     super()
-    this.deckCards = [] // карты в колоде
-    this.discard = [] // бито
-    this.cardsForDefer = [] // карты для защиты
+    this.deckCards = []
+    this.discard = []
+    this.cardsForDefer = []
     this.trumpOfGame = undefined
 
     this.$deck = document.querySelector('.deck')
     this.$pcHand = document.querySelector('.pcHand')
     this.$playerHand = document.querySelector('.playerHand')
   }
-
 
   generate() {
     const suits = ['clubs', 'diamonds', 'spades', 'hearts'],
@@ -27,7 +26,6 @@ export default class Deck extends Card {
       }
     }
   }
-
 
   shuffle() {
     let currentIndex = this.deckCards.length,
@@ -43,7 +41,6 @@ export default class Deck extends Card {
       this.deckCards[randomIndex] = tempValue
     }
   }
-
 
   renderDeck() {
     // отрисовываем колоду с отступом между картами
@@ -65,13 +62,11 @@ export default class Deck extends Card {
     })
   }
 
-
   dealNewCards(players) {
     // выдаем карты каждому игроку из deckCards и рендерим их
     this.dealCard(players[0])
     this.dealCard(players[1])
   }
-
 
   dealCard(player) {
     if (this.$deck.childNodes.length !== 0) {
@@ -90,7 +85,6 @@ export default class Deck extends Card {
     }
   }
 
-
   trumpDefine() {
     // определяем козырь по последней карте в колоде
     this.trumpOfGame = this.deckCards[this.deckCards.length-1]
@@ -98,7 +92,6 @@ export default class Deck extends Card {
     const $trumpOfGame = document.querySelector('.trumpOfGame')
     $trumpOfGame.classList.add(`${this.trumpOfGame.suit}`)
   }
-
 
   firstTurnDefine(options) {
     const {hands, trumpOfGame} = options
@@ -130,7 +123,6 @@ export default class Deck extends Card {
     }
   }
 
-
   findMinValCard(cards, trump) {
      console.log('length: ', cards.length)
 
@@ -145,7 +137,6 @@ export default class Deck extends Card {
       return cards[0]
     }
   }
-
 
   addCardsToDiscard(playersHandCards){
     // добавляем слушатель на экшн-кнопку для отправки карт в бито по нажатию
@@ -194,7 +185,6 @@ export default class Deck extends Card {
 
     setTimeout(() => addCardsToDiscard(), 2000)
   }
-
 
   takeCardsToHand(target, players) {
     console.log('НЕТ КАРТ ДЛЯ ЗАЩИТЫ')

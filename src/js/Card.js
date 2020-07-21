@@ -1,10 +1,8 @@
-import DomListener from '@/js/DomListener'
 import Board from '@/js/Board'
 
 
-export default class Card extends DomListener {
+export default class Card {
   constructor(suit, rank, value) {
-    super()
     this.suit = suit;
     this.rank = rank;
     this.value = value;

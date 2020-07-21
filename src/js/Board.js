@@ -1,11 +1,9 @@
 import Player from '@/js/Player'
 import Deck from '@/js/Deck'
-import DomListener from '@/js/DomListener'
 
 
-class Board extends DomListener {
+class Board {
   constructor() {
-    super()
     this.players = []
     this.deck = new Deck()
     this.turn = ''

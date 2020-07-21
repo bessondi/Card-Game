@@ -13,8 +13,6 @@ import board from '@/js/Board'
       .then(response => response.json())
       .then(data => {
         board.create('Player', `${data.username}`)
-        // console.log( board.players )
-        // console.log( board.players[1].playerCards, board.players[0].playerCards)
       })
       .catch(() => {
         board.create('Player', 'AI')
