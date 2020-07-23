@@ -24,5 +24,3 @@ import board from '@/js/Board'
     document.querySelector('.game__body').style.display = 'grid'
   }
 })()
-
-// TODO - счетчики карт и надписи

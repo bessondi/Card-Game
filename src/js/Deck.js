@@ -60,6 +60,8 @@ export default class Deck extends Card {
 
       this.$deck.appendChild(card)
     })
+
+    // TODO - добавить счетчик карт колоды
   }
 
   dealNewCards(players) {

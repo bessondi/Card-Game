@@ -49,7 +49,7 @@ class Board {
   }
 
   pcTurn() {
-    // TODO АТАКА PC ====================
+    // АТАКА PC ====================
     if (
       this.turn === 'pc'
       && this.turnState === 'pcAttack'
@@ -90,7 +90,7 @@ class Board {
     }
 
 
-    // TODO ЗАЩИТА PC ===================
+    // ЗАЩИТА PC ===================
     if (
       this.turn === 'pc'
       && this.turnState === 'pcDefer'
@@ -152,7 +152,7 @@ class Board {
         // that.deck.addCardsToDiscard(that.players)
       }
 
-      // TODO АТАКА PLAYER ====================
+      // АТАКА PLAYER ====================
       // ходим любой картой
       if (
         that.turn === 'player'
@@ -183,7 +183,7 @@ class Board {
       }
 
 
-      // TODO ЗАЩИТА PLAYER ===================
+      // ЗАЩИТА PLAYER ===================
       // определяем возможные карты для защиты которыми можно ответить
       if (
         that.turn === 'player'
