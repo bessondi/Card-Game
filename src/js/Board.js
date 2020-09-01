@@ -1,5 +1,6 @@
 import Player from '@/js/Player'
 import Deck from '@/js/Deck'
+import {startNewGame} from '@/js/start'
 
 
 class Board {
@@ -81,8 +82,6 @@ class Board {
       this.turnState = 'playerDefer'
 
       if (this.deck.cardsForDefer.length < 1) {
-        console.log('игроку нечем крыть!')
-
         this.deck.takeCardsToHand(this.players[1], this.players)
         this.turn = 'pc'
         this.turnState = 'pcAttack'
@@ -105,17 +104,12 @@ class Board {
               && this.turnState === 'pcDefer'
             ) {
 
-              // делаем проверку возможных карт защиты для pc
-              // console.log('$DEFER CARD ', this.deck.$pcHand.children[$c].dataset.rank, this.deck.$pcHand.children[$c].dataset.suit)
-
               // сходить одной картой
               Player.attack('pcDefer', this.deck.$pcHand.children[$c], this.players[1].playerName)
 
               // после защиты меняем состояние хода pc на атаку
               this.turn = 'pc'
               this.turnState = 'pcAttack'
-              // console.log('ЗАЩИТА PC')
-              // console.log('ХОДИТ ', this.turn, this.turnState)
 
               // устанавливаем слушатель на кнопку для отправки карт в бито
               this.isDiscard = true
@@ -144,12 +138,6 @@ class Board {
         // сходить одной картой
         Player.attack(turnState, $clickedCard)
         $clickedCard.removeEventListener('click', addCardToTable)
-
-        // // делаем проверку возможных карт защиты для pc
-        // that.getCardsForDefer($clickedCard)
-
-        // // устанавливаем слушатель на кнопку для отправки карт в бито
-        // that.deck.addCardsToDiscard(that.players)
       }
 
       // АТАКА PLAYER ====================
@@ -231,8 +219,6 @@ class Board {
       playerCards = this.players[1].playerCards
     } else if (this.turn === 'pc') {
       playerCards = this.players[0].playerCards
-      // убрать выброшенную карту
-      // playerCards = playerCards.filter( (c) => c.rank !== card.dataset.rank && c.value !== card.dataset.value )
     }
 
     for (let c = 0; c < playerCards.length; c++) {
@@ -252,26 +238,8 @@ class Board {
         this.deck.cardsForDefer.push(playerCards[c])
       }
     }
-    // console.log('Карты, ДО: '.toUpperCase(), ...this.deck.cardsForDefer)
 
     // сортируем карты от меньшего к большему - сперва обычные, потом козыри
-    // const sortBy = [{prop: 'value', direction: 1}, {prop: 'suit', direction: -1}]
-    // this.deck.cardsForDefer.sort(function(a, b){
-    //   let i = 0, result = 0;
-    //
-    //   while (i < sortBy.length && result === 0) {
-    //     result = sortBy[i].direction * (
-    //         a[sortBy[i].prop].toString() < b[sortBy[i].prop].toString() ? -1
-    //         : (a[sortBy[i].prop].toString() > b[sortBy[i].prop].toString() ? 1
-    //         : 0)
-    //       )
-    //     i++
-    //   }
-    //   return result
-    // })
-
-    // сортируем карты от меньшего к большему - сперва обычные, потом козыри
-    // TODO корректно отсортировать по мастям
     this.deck.cardsForDefer.sort((a, b) => {
       return a.value - b.value
     })
@@ -308,14 +276,24 @@ class Board {
     const [player, pc] = players
     console.log(player, pc)
 
-    document.querySelector('.playerName')
-      .insertAdjacentHTML('afterbegin', `
+    const $playerName = document.querySelector('.playerName')
+    const $pcName = document.querySelector('.pcName')
+
+    if ($playerName.firstChild) {
+      $playerName.removeChild($playerName.firstChild)
+    } else {
+      $playerName.insertAdjacentHTML('afterbegin', `
           <span>${player.playerName}</span>
       `)
-    document.querySelector('.pcName')
-      .insertAdjacentHTML('afterbegin', `
+    }
+
+    if ($pcName.firstChild) {
+      $pcName.removeChild($pcName.firstChild)
+    } else {
+      $pcName.insertAdjacentHTML('afterbegin', `
           <span>${pc.playerName}</span>
       `)
+    }
   }
 
   newRound() {
@@ -331,12 +309,33 @@ class Board {
     } else {
       document.querySelector('.game__body').style.display = 'none'
       document.querySelector('.winPage').style.display = 'flex'
-      const winPageTitle = document.querySelector('.winPage__title')
+      document.querySelector('.winPage__newGameBtn').addEventListener('click', startNewGame)
 
-      // у игрока остались карты?
-      this.players[0].playerCards.length > 0
-      ? winPageTitle.innerHTML = `GAME OVER! <br/><br/> THE ${this.players[1].playerName.toUpperCase()} WIN!`
-      : winPageTitle.innerHTML = `GAME OVER! <br/><br/> YOU WIN!`
+      // кто выйграл?
+      const winPageTitle = document.querySelector('.winPage__title')
+      this.players[0].playerCards.length === 0
+      && this.players[1].playerCards.length === 0
+      ? winPageTitle.innerHTML = `GAME OVER! <br/><br/> DRAW IN THE GAME!`
+        : this.players[0].playerCards.length > 0
+        ? winPageTitle.innerHTML = `GAME OVER! <br/><br/> THE ${this.players[1].playerName.toUpperCase()} WIN!`
+        : winPageTitle.innerHTML = `GAME OVER! <br/><br/> YOU WIN!`
+    }
+  }
+
+  clear() {
+    if (this.players.length !== 0) {
+      this.deck.clear()
+
+      this.players[0].playerCards = []
+      this.players[1].playerCards = []
+
+      this.deck.deckCards = []
+      this.deck.discard = []
+      this.deck.trumpOfGame = undefined
+
+      this.turn = ''
+      this.turnState = ''
+      this.isDiscard = false
     }
   }
 }

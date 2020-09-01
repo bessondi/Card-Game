@@ -1,6 +1,6 @@
 .winPage {
   display: none;
-  //display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -10,5 +10,10 @@
 
   &__title {
     font-size: 2rem;
+  }
+
+  &__newGameBtn {
+    @extend %newGameBtn;
+    margin-top: 50px;
   }
 }

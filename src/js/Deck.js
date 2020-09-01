@@ -13,6 +13,8 @@ export default class Deck extends Card {
     this.$deck = document.querySelector('.deck')
     this.$pcHand = document.querySelector('.pcHand')
     this.$playerHand = document.querySelector('.playerHand')
+    this.$discard = document.querySelector('.discard')
+    this.$trumpOfGame = document.querySelector('.trumpOfGame')
   }
 
   generate() {
@@ -74,7 +76,6 @@ export default class Deck extends Card {
     if (this.$deck.childNodes.length !== 0) {
       // выдаем новые карты пока не будет 6 карт на руках и рендерим их
       for (let i = player.playerCards.length; i < 6; i++) {
-        // console.log('выдал карту')
         player.playerCards.push(...this.deckCards.splice(0, 1))
 
         if (player.playerName === 'Player') {
@@ -91,8 +92,7 @@ export default class Deck extends Card {
     // определяем козырь по последней карте в колоде
     this.trumpOfGame = this.deckCards[this.deckCards.length-1]
 
-    const $trumpOfGame = document.querySelector('.trumpOfGame')
-    $trumpOfGame.classList.add(`${this.trumpOfGame.suit}`)
+    this.$trumpOfGame.classList.add(`${this.trumpOfGame.suit}`)
   }
 
   firstTurnDefine(options) {
@@ -112,8 +112,6 @@ export default class Deck extends Card {
     const playerMinValueCard = Math.min(...minVal1)
     const pcMinValueCard = Math.min(...minVal2)
 
-    // console.log(`player - ${playerMinValueCard} // pc - ${pcMinValueCard}`)
-
     if (playerMinValueCard === Infinity && pcMinValueCard === Infinity) {
       return 'player'
     } else if (playerMinValueCard === Infinity) {
@@ -126,8 +124,6 @@ export default class Deck extends Card {
   }
 
   findMinValCard(cards, trump) {
-     console.log('length: ', cards.length)
-
      if (cards.length > 1) {
        const cardsWithoutTrump = cards.filter(c => c.suit !== trump.suit)
        const cardsWithTrump = cards.filter(c => c.suit === trump.suit)
@@ -141,15 +137,10 @@ export default class Deck extends Card {
   }
 
   addCardsToDiscard(playersHandCards){
-    // добавляем слушатель на экшн-кнопку для отправки карт в бито по нажатию
-    // const $actionBtn = document.querySelector('.actionBtn')
-    // $actionBtn.addEventListener('click', addCardsToDiscard)
-
     const that = this
 
     function addCardsToDiscard(){
       const $cardsInGame = document.querySelector('.table')
-      const $discard = document.querySelector('.discard')
 
       // переносим карты-объекты из рук в массив бито
       const [player, pc] = playersHandCards
@@ -163,8 +154,6 @@ export default class Deck extends Card {
               && c.rank === cards[i].dataset.rank
             ) {
               that.discard.push(...hand.playerCards.splice(n, 1))
-              // console.log('карты игрока ', hand.playerCards)
-              // console.log('бито ', that.discard)
             }
           })
         }
@@ -175,11 +164,8 @@ export default class Deck extends Card {
       // отправляем $карты в $бито по нажатию кнопки
       while ($cardsInGame.childNodes.length > 0) {
         // переносим 1ю (все) ноду карт в div.discard
-        $discard.appendChild($cardsInGame.childNodes[0])
+        that.$discard.appendChild($cardsInGame.firstChild)
       }
-
-      // удаляем слушатель с кнопки
-      // $actionBtn.removeEventListener('click', addCardsToDiscard)
 
       // начинаем новый уровень
       Board.newRound()
@@ -190,22 +176,17 @@ export default class Deck extends Card {
 
   takeCardsToHand(target, players) {
     console.log('НЕТ КАРТ ДЛЯ ЗАЩИТЫ')
+    console.log('target', target)
 
     const [player, pc] = players
 
-    // добавляем слушатель на экшн-кнопку для отправки карт игроку
     const $actionBtn = document.querySelector('.actionBtn')
     $actionBtn.innerHTML = `Take a Card`
+    $actionBtn.classList.remove('discardState')
     $actionBtn.classList.add('grabState')
 
-    // const that = this
     function takeCards() {
-
-      // console.log('B-playerC', player.playerCards)
-      // console.log('B-pcC', pc.playerCards)
-
       const $cardsInGame = document.querySelector('.table')
-      // const $hand = document.querySelector(`.${target.type}Hand`)
       const $playerHand = document.querySelector(`.playerHand`)
       const $pcHand = document.querySelector(`.pcHand`)
 
@@ -214,8 +195,6 @@ export default class Deck extends Card {
 
         // перебор карт у текущего игрока
         target.playerCards.forEach((c, i) => {
-          // console.log(c.suit, $cardsInGame.children[$c].dataset.suit)
-          // console.log(c.rank, $cardsInGame.children[$c].dataset.rank)
           if (
             c.suit === $cardsInGame.children[$c].dataset.suit
             && c.rank === $cardsInGame.children[$c].dataset.rank
@@ -223,14 +202,9 @@ export default class Deck extends Card {
             target.playerName === player.playerName
               ? pc.playerCards.push(...player.playerCards.splice(i, 1))
               : player.playerCards.push(...pc.playerCards.splice(i, 1))
-
-            // console.log(target.playerCards.length)
           }
         })
       }
-
-      // console.log('A-playerC', player.playerCards)
-      // console.log('A-pcC', pc.playerCards)
 
       // отправляем $карты в $руку
       while ($cardsInGame.childNodes.length > 0) {
@@ -246,17 +220,29 @@ export default class Deck extends Card {
           : $playerHand.appendChild(newCard)
       }
 
-      // удаляем слушатель с кнопки
-      $actionBtn.removeEventListener('click', takeCards)
-
       // начинаем новый уровень
       Board.newRound()
     }
 
-    // if (target.playerName === 'pc') {
-      setTimeout(() => takeCards(), 2500)
-    // } else {
-    //   $actionBtn.addEventListener('click', takeCards)
-    // }
+    setTimeout(() => takeCards(), 2500)
+  }
+
+  clear() {
+    this.deckCards = []
+    this.discard = []
+    this.cardsForDefer = []
+    this.trumpOfGame = undefined
+    this.$trumpOfGame.classList.remove('clubs', 'diamonds', 'hearts', 'spades')
+
+    function removeCardNodes(parent) {
+      while (parent.firstChild) {
+        parent.removeChild(parent.firstChild);
+      }
+    }
+
+    removeCardNodes(this.$playerHand)
+    removeCardNodes(this.$pcHand)
+    removeCardNodes(this.$deck)
+    removeCardNodes(this.$discard)
   }
 }

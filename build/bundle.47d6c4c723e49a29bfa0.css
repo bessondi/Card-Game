@@ -1,0 +1,351 @@
+/*! normalize.css v8.0.1 | MIT License | github.com/necolas/normalize.css */
+
+/* Document
+   ========================================================================== */
+
+/**
+ * 1. Correct the line height in all browsers.
+ * 2. Prevent adjustments of font size after orientation changes in iOS.
+ */
+
+html {
+  line-height: 1.15; /* 1 */
+  -webkit-text-size-adjust: 100%; /* 2 */
+}
+
+/* Sections
+   ========================================================================== */
+
+/**
+ * Remove the margin in all browsers.
+ */
+
+body {
+  margin: 0;
+}
+
+/**
+ * Render the `main` element consistently in IE.
+ */
+
+main {
+  display: block;
+}
+
+/**
+ * Correct the font size and margin on `h1` elements within `section` and
+ * `article` contexts in Chrome, Firefox, and Safari.
+ */
+
+h1 {
+  font-size: 2em;
+  margin: 0.67em 0;
+}
+
+/* Grouping content
+   ========================================================================== */
+
+/**
+ * 1. Add the correct box sizing in Firefox.
+ * 2. Show the overflow in Edge and IE.
+ */
+
+hr {
+  box-sizing: content-box; /* 1 */
+  height: 0; /* 1 */
+  overflow: visible; /* 2 */
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+pre {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/* Text-level semantics
+   ========================================================================== */
+
+/**
+ * Remove the gray background on active links in IE 10.
+ */
+
+a {
+  background-color: transparent;
+}
+
+/**
+ * 1. Remove the bottom border in Chrome 57-
+ * 2. Add the correct text decoration in Chrome, Edge, IE, Opera, and Safari.
+ */
+
+abbr[title] {
+  border-bottom: none; /* 1 */
+  text-decoration: underline; /* 2 */
+  text-decoration: underline dotted; /* 2 */
+}
+
+/**
+ * Add the correct font weight in Chrome, Edge, and Safari.
+ */
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+/**
+ * 1. Correct the inheritance and scaling of font size in all browsers.
+ * 2. Correct the odd `em` font sizing in all browsers.
+ */
+
+code,
+kbd,
+samp {
+  font-family: monospace, monospace; /* 1 */
+  font-size: 1em; /* 2 */
+}
+
+/**
+ * Add the correct font size in all browsers.
+ */
+
+small {
+  font-size: 80%;
+}
+
+/**
+ * Prevent `sub` and `sup` elements from affecting the line height in
+ * all browsers.
+ */
+
+sub,
+sup {
+  font-size: 75%;
+  line-height: 0;
+  position: relative;
+  vertical-align: baseline;
+}
+
+sub {
+  bottom: -0.25em;
+}
+
+sup {
+  top: -0.5em;
+}
+
+/* Embedded content
+   ========================================================================== */
+
+/**
+ * Remove the border on images inside links in IE 10.
+ */
+
+img {
+  border-style: none;
+}
+
+/* Forms
+   ========================================================================== */
+
+/**
+ * 1. Change the font styles in all browsers.
+ * 2. Remove the margin in Firefox and Safari.
+ */
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-family: inherit; /* 1 */
+  font-size: 100%; /* 1 */
+  line-height: 1.15; /* 1 */
+  margin: 0; /* 2 */
+}
+
+/**
+ * Show the overflow in IE.
+ * 1. Show the overflow in Edge.
+ */
+
+button,
+input { /* 1 */
+  overflow: visible;
+}
+
+/**
+ * Remove the inheritance of text transform in Edge, Firefox, and IE.
+ * 1. Remove the inheritance of text transform in Firefox.
+ */
+
+button,
+select { /* 1 */
+  text-transform: none;
+}
+
+/**
+ * Correct the inability to style clickable types in iOS and Safari.
+ */
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+}
+
+/**
+ * Remove the inner border and padding in Firefox.
+ */
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+/**
+ * Restore the focus styles unset by the previous rule.
+ */
+
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+/**
+ * Correct the padding in Firefox.
+ */
+
+fieldset {
+  padding: 0.35em 0.75em 0.625em;
+}
+
+/**
+ * 1. Correct the text wrapping in Edge and IE.
+ * 2. Correct the color inheritance from `fieldset` elements in IE.
+ * 3. Remove the padding so developers are not caught out when they zero out
+ *    `fieldset` elements in all browsers.
+ */
+
+legend {
+  box-sizing: border-box; /* 1 */
+  color: inherit; /* 2 */
+  display: table; /* 1 */
+  max-width: 100%; /* 1 */
+  padding: 0; /* 3 */
+  white-space: normal; /* 1 */
+}
+
+/**
+ * Add the correct vertical alignment in Chrome, Firefox, and Opera.
+ */
+
+progress {
+  vertical-align: baseline;
+}
+
+/**
+ * Remove the default vertical scrollbar in IE 10+.
+ */
+
+textarea {
+  overflow: auto;
+}
+
+/**
+ * 1. Add the correct box sizing in IE 10.
+ * 2. Remove the padding in IE 10.
+ */
+
+[type="checkbox"],
+[type="radio"] {
+  box-sizing: border-box; /* 1 */
+  padding: 0; /* 2 */
+}
+
+/**
+ * Correct the cursor style of increment and decrement buttons in Chrome.
+ */
+
+[type="number"]::-webkit-inner-spin-button,
+[type="number"]::-webkit-outer-spin-button {
+  height: auto;
+}
+
+/**
+ * 1. Correct the odd appearance in Chrome and Safari.
+ * 2. Correct the outline style in Safari.
+ */
+
+[type="search"] {
+  -webkit-appearance: textfield; /* 1 */
+  outline-offset: -2px; /* 2 */
+}
+
+/**
+ * Remove the inner padding in Chrome and Safari on macOS.
+ */
+
+[type="search"]::-webkit-search-decoration {
+  -webkit-appearance: none;
+}
+
+/**
+ * 1. Correct the inability to style clickable types in iOS and Safari.
+ * 2. Change font properties to `inherit` in Safari.
+ */
+
+::-webkit-file-upload-button {
+  -webkit-appearance: button; /* 1 */
+  font: inherit; /* 2 */
+}
+
+/* Interactive
+   ========================================================================== */
+
+/*
+ * Add the correct display in Edge, IE 10+, and Firefox.
+ */
+
+details {
+  display: block;
+}
+
+/*
+ * Add the correct display in all browsers.
+ */
+
+summary {
+  display: list-item;
+}
+
+/* Misc
+   ========================================================================== */
+
+/**
+ * Add the correct display in IE 10+.
+ */
+
+template {
+  display: none;
+}
+
+/**
+ * Add the correct display in IE 10.
+ */
+
+[hidden] {
+  display: none;
+}
+
+@font-face{font-family:"Cards Caracter";src:url(48fc41e583b9516fd12ea6f26044f36d.ttf) format("truetype");font-style:normal;font-weight:normal}@font-face{font-family:"Akzidenz Grotesk";src:url(bc17bd9624a2c3ea0116540983cbad68.ttf) format("truetype");font-style:normal;font-weight:normal}body .game__body .trumpOfGame.clubs,body .game__body .card .clubs{background:url(48b0848de7a18616e90c6a4540bdccdc.svg) no-repeat}body .game__body .trumpOfGame.diamonds,body .game__body .card .diamonds{background:url(b85218218e0d914d11407dbadf089c21.svg) no-repeat}body .game__body .trumpOfGame.spades,body .game__body .card .spades{background:url(3508f63b7f9c0a0bb40d8cc536ca90e7.svg) no-repeat}body .game__body .trumpOfGame.hearts,body .game__body .card .hearts{background:url(8838e9f2c1edf4288661b0796bb07d3c.svg) no-repeat}body .game__body .card__suit{width:40px;height:40px}body .game__body .card__rankSuit{margin-top:2px;width:12px;height:12px}body .game__body .actionBtn,body .game .winPage__newGameBtn,body .game .startPage__newGameBtn{width:150px;height:50px;background:#000;color:#fff;border-radius:50px;font-weight:bold;outline:none;border:none;transition:.3s;cursor:pointer}body .game .winPage__newGameBtn,body .game .startPage__newGameBtn{font-size:1.3rem;width:200px;height:80px;z-index:4}body .game .winPage__newGameBtn:hover,body .game .startPage__newGameBtn:hover{background-color:#2ea44f}body .game__body .playerName,body .game__body .pcName{font-size:2rem;color:#fff}body{font-family:"Akzidenz Grotesk",sans-serif;font-size:16px}body .game{background:#000;width:100%;height:100vh;display:flex;align-items:center;justify-content:center}body .game .startPage{display:flex;flex-flow:column;justify-content:center;align-items:center;position:absolute;top:0;right:0;bottom:0;left:0;width:100vw;height:100vh;overflow:hidden;background-color:#fff}body .game .startPage__title{font-size:3rem;text-align:center;margin-bottom:100px;line-height:4rem}body .game .startPage__decor{width:100%;height:150%;background-image:url(8acaf4d6e69b49f5e7f6b44185583376.svg);background-repeat:no-repeat;position:fixed;top:-15%;left:-15%;bottom:0;transform:rotate(20deg)}body .game .startPage__introCard{position:absolute;top:10%;right:-55%;width:100%;height:150%;background-image:url(dc955731123711cc8f16d0b257483af3.svg);background-repeat:no-repeat}body .game__body{display:none;width:97%;height:95%;border-radius:50px;background:linear-gradient(#196d1a, #004f00);grid-template-columns:minmax(200px, 1fr) 2fr minmax(200px, 1fr);grid-template-rows:repeat(3, auto);gap:20px;align-items:center;justify-items:center;grid-template-areas:"trump pc pcName" "deck table discard" "btn player playerName"}body .game__body .card{position:absolute;display:flex;flex-flow:column;justify-content:space-between;align-items:center;width:80px;height:120px;padding:5px;margin:5px;background:#eee;border:2px solid #222;border-radius:10px;z-index:2;opacity:1;transition:.3s;font-family:"Cards Caracter",sans-serif}body .game__body .card__top{display:flex;flex-flow:column;align-self:flex-start;align-items:center}body .game__body .card__bottom{display:flex;flex-flow:column;align-self:flex-end;align-items:center;transform:rotate(180deg)}body .game__body .card.hidden{opacity:0;transition:.3s}body .game__body .card__shirt:not(.card__trump){background-color:#555;background-image:url(67aec11b376cddf4885e5f1e560ced18.svg);background-repeat:no-repeat}body .game__body .card__shirt:not(.card__trump)>*{visibility:hidden}body .game__body .card__shirt:not(.deck)>*{visibility:hidden}body .game__body .deck{grid-area:deck;position:relative;right:25px;width:150px;height:150px}body .game__body .deck .card__trump{transform:rotate(90deg);top:10px;right:-20px;z-index:1}body .game__body .deck .card__trump.card__shirt:not(.deck)>*{visibility:visible}body .game__body .table{position:relative;grid-area:table;display:flex;flex-flow:row;justify-content:center;width:100%}body .game__body .table .card{position:relative;background:#eee;opacity:1;transition:.3s}body .game__body .table .card:nth-child(even){position:absolute;left:45%;top:10%;box-shadow:2px 2px 3px 0 rgba(0,0,0,.4);background:#eee}body .game__body .table>.card.card__shirt>*{visibility:visible}body .game__body .discard{grid-area:discard;display:flex;flex-flow:row;position:relative;left:-25px;height:150px;width:150px}body .game__body .discard .card__trump{background-color:#555;background-image:url(67aec11b376cddf4885e5f1e560ced18.svg);background-repeat:no-repeat}body .game__body .discard .card:nth-child(even){transform:rotate(12deg)}body .game__body .hands{display:flex;justify-content:center;align-items:center;width:100%;height:100%}body .game__body .hands .card{position:static}body .game__body .pcHand{grid-area:pc}body .game__body .pcHand .card__trump{background-color:#555;background-image:url(67aec11b376cddf4885e5f1e560ced18.svg);background-repeat:no-repeat}body .game__body .playerHand{grid-area:player}body .game__body .playerHand>.card.card__shirt>*{visibility:visible}body .game__body .playerHand>.card{background:#eee;cursor:pointer;transition:.3s}body .game__body .playerHand>.card.cardsForDefer{background:#fff;border-color:#2ea44f;transform:translateY(-10px)}body .game__body .playerHand>.card:hover{transform:translateY(-5px);background-color:#fff;box-shadow:3px 3px 3px 0 rgba(0,0,0,.5)}body .game__body .actionBtn{grid-area:btn;position:relative;left:10px;visibility:hidden;cursor:auto}body .game__body .actionBtn.active{visibility:visible;transition:.3s}body .game__body .actionBtn.grabState{background:#fd7e14}body .game__body .actionBtn.discardState{background:#2ea44f}body .game__body .actionBtn.turnState{background:#000}body .game__body .trumpOfGame{grid-area:trump;display:flex;width:100px;height:100px}body .game__body .pcName{grid-area:pcName}body .game__body .playerName{grid-area:playerName}body .game .winPage{display:none;flex-direction:column;justify-content:center;align-items:center;width:100%;height:100%;background-color:#fff;text-align:center}body .game .winPage__title{font-size:2rem}body .game .winPage__newGameBtn{margin-top:50px}body .plug{position:absolute;top:0;right:0;bottom:0;left:0;width:100vw;height:100vh;background-color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.5rem;z-index:5}body .plug__title{text-align:center}@media screen and (min-width: 1200px){body .plug{display:none}}

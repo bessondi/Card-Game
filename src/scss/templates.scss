@@ -1,11 +1,9 @@
 %clubs {
   background: url("../assets/svg/clubs.svg") no-repeat;
-  filter: invert(34%) sepia(100%) saturate(1725%) hue-rotate(100deg) brightness(88%) contrast(105%);
 }
 
 %diamonds {
   background: url("../assets/svg/diamond.svg") no-repeat;
-  filter: invert(32%) sepia(84%) saturate(5319%) hue-rotate(211deg) brightness(101%) contrast(106%);
 }
 
 %spades {
@@ -14,7 +12,6 @@
 
 %hearts {
   background: url("../assets/svg/heart.svg") no-repeat;
-  filter: invert(21%) sepia(90%) saturate(7396%) hue-rotate(358deg) brightness(106%) contrast(118%);
 }
 
 %suitSize {
@@ -23,17 +20,17 @@
 }
 
 %rankSuitSize {
-  width: 10px;
-  height: 10px;
+  margin-top: 2px;
+  width: 12px;
+  height: 12px;
 }
 
 %btn {
   width: 150px;
   height: 50px;
   background: $actionDefaultColor;
-  color: #fff;
+  color: $whiteColor;
   border-radius: 50px;
-  //font-size: 1.125rem;
   font-weight: bold;
   outline: none;
   border: none;
@@ -41,6 +38,19 @@
   cursor: pointer;
 }
 
+%newGameBtn {
+  @extend %btn;
+  font-size: 1.3rem;
+  width: 200px;
+  height: 80px;
+  z-index: 4;
+
+  &:hover {
+    background-color: $startBtnHoverColor;
+  }
+}
+
 %name {
   font-size: 2rem;
+  color: $whiteColor;
 }

@@ -12,7 +12,6 @@ export default class Player {
 
     const throwCard = ($c) => $table.appendChild($c)
 
-
     switch (turn) {
       case 'pcAttack':
         $actionBtn.innerHTML = `${whoTurn} Turn`
@@ -27,26 +26,24 @@ export default class Player {
         setTimeout(() => {
           throwCard($card)
           $actionBtn.innerHTML = 'Discard!'
-          $actionBtn.classList.toggle('discardState')
+          $actionBtn.classList.add('discardState')
         }, 1000)
         break
 
       case 'playerAttack':
         throwCard($card)
         $actionBtn.innerHTML = 'Turn!'
-        // $actionBtn.classList.toggle('grabState')
         break
 
       case 'playerDefer':
         throwCard($card)
         $actionBtn.innerHTML = 'Discard!'
-        $actionBtn.classList.toggle('discardState')
+        $actionBtn.classList.add('discardState')
         break
 
       default:
         $actionBtn.innerHTML = `${whoTurn} Turn`
         $actionBtn.classList.remove('discardState', 'grabState')
-        // $actionBtn.classList.toggle('grabState')
     }
   }
 
