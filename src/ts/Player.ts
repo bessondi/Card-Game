@@ -1,16 +1,23 @@
+import {CardProperties} from './types'
+
+
 export default class Player {
-  constructor(name, type) {
+  playerName: string;
+  playerCards: CardProperties[];
+  type: string;
+
+  constructor(name: string, type: string) {
     this.playerName = name
     this.playerCards = []
     this.type = type
   }
 
-  static attack(turn, $card, whoTurn = 'Your') {
-    const $table = document.querySelector('.table')
-    const $actionBtn = document.querySelector('.actionBtn')
+  static attack(turn?: string, $card?: Element | Node, whoTurn: string = 'Your'): void {
+    const $table: Element = document.querySelector('.table')
+    const $actionBtn: Element = document.querySelector('.actionBtn')
     $actionBtn.classList.add('active')
 
-    const throwCard = ($c) => $table.appendChild($c)
+    const throwCard = ($c: Element | Node): Element | Node => $table.appendChild($c)
 
     switch (turn) {
       case 'pcAttack':
@@ -46,5 +53,4 @@ export default class Player {
         $actionBtn.classList.remove('discardState', 'grabState')
     }
   }
-
 }

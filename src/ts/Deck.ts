@@ -1,14 +1,25 @@
-import Card from '@/js/Card'
-import Board from '@/js/Board'
+import Card from './Card'
+import {CardProperties, PlayerProperties} from './types'
+import Board from '../ts/Board'
 
 
 export default class Deck extends Card {
-  constructor() {
-    super()
+  deckCards: Array<CardProperties>
+  discard: Array<CardProperties>
+  cardsForDefer: Array<CardProperties>
+  trumpOfGame: CardProperties
+  $deck: Element
+  $pcHand: Element
+  $playerHand: Element
+  $discard: Element
+  $trumpOfGame: Element
+
+  constructor(suit?: string, rank?: string, value?: number) {
+    super(suit, rank, value)
     this.deckCards = []
     this.discard = []
     this.cardsForDefer = []
-    this.trumpOfGame = undefined
+    this.trumpOfGame = null
 
     this.$deck = document.querySelector('.deck')
     this.$pcHand = document.querySelector('.pcHand')
@@ -17,10 +28,10 @@ export default class Deck extends Card {
     this.$trumpOfGame = document.querySelector('.trumpOfGame')
   }
 
-  generate() {
-    const suits = ['clubs', 'diamonds', 'spades', 'hearts'],
-      ranks = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
-      values = [6, 7, 8, 9, 10, 11, 12, 13, 14]
+  generate(): void {
+    const suits: Array<string> = ['clubs', 'diamonds', 'spades', 'hearts'],
+      ranks: Array<string> = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A'],
+      values: Array<number> = [6, 7, 8, 9, 10, 11, 12, 13, 14]
 
     for (let s = 0; s < suits.length; s++) {
       for (let r = 0; r < ranks.length; r++) {
@@ -29,10 +40,10 @@ export default class Deck extends Card {
     }
   }
 
-  shuffle() {
-    let currentIndex = this.deckCards.length,
-      randomIndex,
-      tempValue
+  shuffle(): void {
+    let currentIndex: number = this.deckCards.length,
+      randomIndex: number,
+      tempValue: CardProperties
 
     while (currentIndex !== 0) {
       randomIndex = Math.floor(Math.random() * currentIndex)
@@ -44,35 +55,35 @@ export default class Deck extends Card {
     }
   }
 
-  renderDeck() {
+  renderDeck(): void {
     // отрисовываем колоду с отступом между картами
-    let indent = 0
+    let indent: number = 0
 
     this.deckCards.forEach((c, i, d) => {
       // отрисовываем карты которые не выдали игрокам
-      const card = super.renderCard(c)
+      const $card: HTMLElement = super.renderCard(c)
 
       if (c === d[d.length - 1]) { // последняя карта в массиве и дом-колоде
-        card.classList.add('card__trump')
+        $card.classList.add('card__trump')
       } else {
-        card.style.right = `${indent}em` // остальная колода
-        card.style.bottom = `${indent}em`
+        $card.style.right = `${indent}em` // остальная колода
+        $card.style.bottom = `${indent}em`
         indent += 0.02
       }
 
-      this.$deck.appendChild(card)
+      this.$deck.appendChild($card)
     })
 
     // TODO - добавить счетчик карт колоды
   }
 
-  dealNewCards(players) {
+  dealNewCards(players: Array<PlayerProperties>): void {
     // выдаем карты каждому игроку из deckCards и рендерим их
     this.dealCard(players[0])
     this.dealCard(players[1])
   }
 
-  dealCard(player) {
+  dealCard(player: PlayerProperties): void {
     if (this.$deck.childNodes.length !== 0) {
       // выдаем новые карты пока не будет 6 карт на руках и рендерим их
       for (let i = player.playerCards.length; i < 6; i++) {
@@ -88,29 +99,28 @@ export default class Deck extends Card {
     }
   }
 
-  trumpDefine() {
+  trumpDefine(): void {
     // определяем козырь по последней карте в колоде
     this.trumpOfGame = this.deckCards[this.deckCards.length-1]
-
     this.$trumpOfGame.classList.add(`${this.trumpOfGame.suit}`)
   }
 
-  firstTurnDefine(options) {
+  firstTurnDefine(options: { hands: any[]; trumpOfGame: string }): string {
     const {hands, trumpOfGame} = options
     const [player, pc] = hands
 
-    const minVal1 = []
-    const minVal2 = []
+    const minVal1: any[] = []
+    const minVal2: any[] = []
 
-    player.forEach(c => {
+    player.forEach((c: { suit: string; value: any }) => {
       c.suit === trumpOfGame ? minVal1.push(c.value) : null
     })
-    pc.forEach(c => {
+    pc.forEach((c: { suit: string; value: any }) => {
       c.suit === trumpOfGame ? minVal2.push(c.value) : null
     })
 
-    const playerMinValueCard = Math.min(...minVal1)
-    const pcMinValueCard = Math.min(...minVal2)
+    const playerMinValueCard: number = Math.min(...minVal1)
+    const pcMinValueCard: number = Math.min(...minVal2)
 
     if (playerMinValueCard === Infinity && pcMinValueCard === Infinity) {
       return 'player'
@@ -123,10 +133,10 @@ export default class Deck extends Card {
     }
   }
 
-  findMinValCard(cards, trump) {
-     if (cards.length > 1) {
-       const cardsWithoutTrump = cards.filter(c => c.suit !== trump.suit)
-       const cardsWithTrump = cards.filter(c => c.suit === trump.suit)
+  findMinValCard(cards: CardProperties[], trump: { suit: any; rank?: string; value?: number }): CardProperties {
+    if (cards.length > 1) {
+      const cardsWithoutTrump: any[] = cards.filter(c => c.suit !== trump.suit)
+      const cardsWithTrump: any[] = cards.filter(c => c.suit === trump.suit)
 
       return cardsWithoutTrump.length > 0
         ? cardsWithoutTrump.reduce((prev, curr) => prev.value < curr.value ? prev : curr, 0)
@@ -136,17 +146,17 @@ export default class Deck extends Card {
     }
   }
 
-  addCardsToDiscard(playersHandCards){
+  addCardsToDiscard(playersHandCards: any[]): void {
     const that = this
 
-    function addCardsToDiscard(){
-      const $cardsInGame = document.querySelector('.table')
+    function addCardsToDiscard(): void {
+      const $cardsInGame: Element = document.querySelector('.table')
 
       // переносим карты-объекты из рук в массив бито
       const [player, pc] = playersHandCards
-      const cards = Array.prototype.slice.call($cardsInGame.children)
+      const cards: any[] = Array.prototype.slice.call($cardsInGame.children)
 
-      function compareCards(hand) {
+      function compareCards(hand: { suit?: string; rank?: string; value?: number; playerCards?: CardProperties[] }): void {
         for (let i = cards.length-1; i >= 0; i--) {
           hand.playerCards.forEach( (c, n) => {
             if (
@@ -174,30 +184,30 @@ export default class Deck extends Card {
     setTimeout(() => addCardsToDiscard(), 2000)
   }
 
-  takeCardsToHand(target, players) {
+  takeCardsToHand(target: { playerCards: CardProperties[]; playerName: string; type: string }, players: any[]) {
     console.log('НЕТ КАРТ ДЛЯ ЗАЩИТЫ')
     console.log('target', target)
 
     const [player, pc] = players
 
-    const $actionBtn = document.querySelector('.actionBtn')
+    const $actionBtn: Element = document.querySelector('.actionBtn')
     $actionBtn.innerHTML = `Take a Card`
     $actionBtn.classList.remove('discardState')
     $actionBtn.classList.add('grabState')
 
-    function takeCards() {
-      const $cardsInGame = document.querySelector('.table')
-      const $playerHand = document.querySelector(`.playerHand`)
-      const $pcHand = document.querySelector(`.pcHand`)
+    function takeCards(): void {
+      const $cardsInGame: HTMLCollection = document.querySelector('.table').children // живая коллекция
+      const $playerHand: Element = document.querySelector(`.playerHand`)
+      const $pcHand: Element = document.querySelector(`.pcHand`)
 
       // перебор карт на столе
-      for (let $c = $cardsInGame.children.length-1; $c >= 0; $c--) {
+      for (let $c = $cardsInGame.length - 1; $c >= 0; $c--) {
 
         // перебор карт у текущего игрока
         target.playerCards.forEach((c, i) => {
           if (
-            c.suit === $cardsInGame.children[$c].dataset.suit
-            && c.rank === $cardsInGame.children[$c].dataset.rank
+          // @ts-ignore
+          c.suit === $cardsInGame[$c].dataset.suit && c.rank === $cardsInGame[$c].dataset.rank
           ) {
             target.playerName === player.playerName
               ? pc.playerCards.push(...player.playerCards.splice(i, 1))
@@ -207,8 +217,8 @@ export default class Deck extends Card {
       }
 
       // отправляем $карты в $руку
-      while ($cardsInGame.childNodes.length > 0) {
-        const newCard = $cardsInGame.childNodes[0]
+      while ($cardsInGame.length > 0) {
+        const newCard = $cardsInGame[0]
 
         if (target.type === 'pc') {
           Board.addListener(newCard)
@@ -234,7 +244,7 @@ export default class Deck extends Card {
     this.trumpOfGame = undefined
     this.$trumpOfGame.classList.remove('clubs', 'diamonds', 'hearts', 'spades')
 
-    function removeCardNodes(parent) {
+    function removeCardNodes(parent: Element): void {
       while (parent.firstChild) {
         parent.removeChild(parent.firstChild);
       }

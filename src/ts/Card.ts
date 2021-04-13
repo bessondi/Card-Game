@@ -1,38 +1,43 @@
-import Board from '@/js/Board'
+import Board from '../ts/Board'
+import {CardProperties} from './types'
 
 
 export default class Card {
-  constructor(suit, rank, value) {
+  suit: string;
+  rank: string;
+  value: number;
+
+  constructor(suit: string, rank: string, value: number) {
     this.suit = suit;
     this.rank = rank;
     this.value = value;
   }
 
-  renderCard(card, player) {
-    const $card = document.createElement('div'),
-      $top = document.createElement('div'),
-      $bottom = document.createElement('div'),
-      $rank = document.createElement('span'),
-      $rankSuit = document.createElement('span'),
-      $suit = document.createElement('div')
+  renderCard(card: CardProperties, player?: string): HTMLElement {
+    const $card: HTMLElement = document.createElement('div'),
+      $top: HTMLElement = document.createElement('div'),
+      $bottom: HTMLElement = document.createElement('div'),
+      $rank: HTMLElement = document.createElement('span'),
+      $rankSuit: HTMLElement = document.createElement('span'),
+      $suit: HTMLElement = document.createElement('div')
 
     $card.classList.add('card', 'card__shirt')
     $top.classList.add('card__top')
     $bottom.classList.add('card__bottom')
 
-    $rank.innerHTML = card.rank
+    $rank.textContent = card.rank
     $rank.classList.add('card__rank')
     $rankSuit.classList.add('card__rankSuit', card.suit)
     $suit.classList.add('card__suit', card.suit)
 
-    const rankCloneBottom = $rank.cloneNode()
+    const rankCloneBottom: Node = $rank.cloneNode()
     const rankSuitCloneBottom = $rankSuit.cloneNode()
-    rankCloneBottom.innerHTML = card.rank
+    rankCloneBottom.textContent = card.rank
 
     // dataset for listener
     $card.dataset.rank = card.rank
     $card.dataset.suit = card.suit
-    $card.dataset.value = card.value
+    $card.dataset.value = String(card.value)
 
     $top.appendChild($rank)
     $top.appendChild($rankSuit)
