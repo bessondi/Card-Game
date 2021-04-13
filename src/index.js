@@ -1,5 +1,4 @@
 import '@/scss/index.scss'
-import {startNewGame} from '@/js/start'
+import init from './ts/start'
 
-
-document.querySelector('.startPage__newGameBtn').addEventListener('click', startNewGame)
+init()
